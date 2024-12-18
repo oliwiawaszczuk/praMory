@@ -6,7 +6,7 @@ import HomeScreen from "./screens/Home";
 const Stack = createNativeStackNavigator();
 
 const linking = {
-    prefix: ["pra://"],
+    prefixes: ["pra://"],
     config: {
         screens: {
             Home: 'home',
