@@ -1,36 +1,22 @@
 import React, {useEffect, useState} from "react";
-import {Button, TextInput, FlatList, View, Text} from "react-native";
+import {Button, TextInput, FlatList, View, ScrollView} from "react-native";
 import {storage} from "../store/storage";
+import {Text} from "../components/Text/Default"
+import PrimaryButton from "../components/Buttons/Primary";
+import PalaceCard from "../components/PalaceCard";
+import AddNewPalace from "../components/AddNewPalace";
 
-export default function HomeScreen() {
-    const addPalace = storage((state) => state.addPalace);
+export default function HomeScreen({navigation}: {navigation: any}) {
     const palaces = storage((state) => state.palaces);
-    const [newTitle, setNewTitle] = useState('');
-
-    const handleAddPalace = () => {
-        addPalace({id: 1, title: newTitle});
-        setNewTitle('');
-    };
 
     return (
-        <>
-            <TextInput
-                placeholder="Enter palace title"
-                value={newTitle}
-                onChangeText={setNewTitle}
-                style={{borderWidth: 1, marginBottom: 10, padding: 5}}
-            />
-            <Button title="Add Palace" onPress={handleAddPalace}/>
+        <View style={{flex: 1}}>
+            <ScrollView style={{flex:1}}>
+                {palaces.map((item, index) => (<PalaceCard key={index} palace={item} onclick={() => navigation.navigate('PalaceDetail', { id: item.id })}/>))}
+                <PrimaryButton text="Settings" onPressFunc={() => navigation.navigate("Settings")}/>
+            </ScrollView>
 
-            <FlatList
-                data={palaces}
-                keyExtractor={(_, index) => index.toString()}
-                renderItem={({item, index}) => (
-                    <View>
-                        <Text>{item.title}</Text>
-                    </View>
-                )}
-            />
-        </>
+            <AddNewPalace/>
+        </View>
     )
 }
