@@ -73,11 +73,11 @@ export default function PalaceCard({palace, navigation}: { palace: Palace, navig
                 onLongPress={() => setVisibleEditPalaceCardModal(true)}
             >
                 <View style={styles.imageContainer}>
-                    {/*<Image*/}
-                    {/*    source={"../"}*/}
-                    {/*    style={styles.image}*/}
-                    {/*    resizeMode="cover"*/}
-                    {/*/>*/}
+                    (palace.path_to_image && <Image
+                        source={{uri: palace.path_to_image}}
+                        style={styles.image}
+                        resizeMode="cover"
+                    />)
                 </View>
 
                 <View style={styles.textContainer}>

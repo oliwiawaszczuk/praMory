@@ -12,6 +12,7 @@ interface StorageInterface {
     addRoom: (room: Room) => void
     removeRoom: (id: number) => void
     updatePalace: (id: number, newTitle: string) => void
+    updatePalaceImage: (id: number, newImagePath: string) => void
 }
 
 export const storage = create<StorageInterface>()(
@@ -24,7 +25,7 @@ export const storage = create<StorageInterface>()(
             addPalace: (newPalace: Palace) => {
                 set((state) => ({
                     palaces: [...state.palaces, newPalace],
-                }));
+                }))
             },
             removePalace: (id: number) => {
                 set((state) => ({
@@ -39,12 +40,19 @@ export const storage = create<StorageInterface>()(
                     ),
                 }))
             },
+            updatePalaceImage: (id: number, newImagePath: string) => {
+                set((state) => ({
+                    palaces: state.palaces.map((palace) =>
+                        palace.id === id ? { ...palace, path_to_image: newImagePath } : palace
+                    ),
+                }))
+            },
 
         // MODIFICATION ROOMS
             addRoom: (newRoom: Room) => {
                 set((state) => ({
                     rooms: [...state.rooms, newRoom],
-                }));
+                }))
             },
             removeRoom: (id: number) => {
                 set((state) => ({

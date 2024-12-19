@@ -17,7 +17,9 @@ export default function AddNewPalace() {
             addPalace(
                 {
                     id: palaces.length > 0 ? Math.max(...palaces.map(p => p.id)) + 1 : 1,
-                    title: newTitle
+                    title: newTitle,
+                    path_to_image: null,
+                    rooms: null,
                 }
             )
             setNewTitle('')
