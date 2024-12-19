@@ -4,11 +4,10 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import HomeScreen from "./screens/Home";
 import Layout from "./Layout";
 import {yellowPrimary, grayPrimary, greenPrimary, grayPrimaryDarker, black, yellowPrimaryDarker} from "./const/Colors";
-import PrimaryButton from "./components/Buttons/Primary";
-import {log} from "expo/build/devtools/logger";
 import SettingsScreen from "./screens/Settings";
 import PalaceDetail from "./screens/PalaceDetail";
 import ImageLook from "./screens/ImageLook";
+import {TouchableOpacity, Image} from "react-native";
 
 const Stack = createNativeStackNavigator();
 
@@ -25,7 +24,6 @@ const headerBackgroundColor = yellowPrimary
 const headerTextColor = black
 
 export default function App() {
-    const [currentRoute, setCurrentRoute] = useState('');
 
     return (
         <NavigationContainer linking={linking}>
@@ -37,8 +35,12 @@ export default function App() {
                     headerStyle: {backgroundColor: headerBackgroundColor},
                     headerTintColor: headerTextColor,
                     headerTitleStyle: {fontWeight: 'bold'},
-                    headerRight: () => (<PrimaryButton text="home" onPressFunc={() => navigation.navigate('Home')}
-                />)})}
+                    headerRight: () => (
+                        <TouchableOpacity activeOpacity={0.9} onPress={() => navigation.navigate('Home')}>
+                            <Image source={require("./assets/icon_green.png")} style={{ height: 36, aspectRatio: 1, marginVertical: 10 }}/>
+                        </TouchableOpacity>
+                    )
+                })}
                 screenLayout={Layout}
             >
                 <Stack.Screen name="Home" component={HomeScreen} options={{title: 'praMory' }}/>
