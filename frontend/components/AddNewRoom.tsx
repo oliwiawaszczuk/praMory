@@ -6,21 +6,19 @@ import {Text} from "./Text/Default"
 import {grayPrimary, grayPrimaryDarker} from "../const/Colors";
 import {InputText} from "./Input/InputText";
 
-export default function AddNewPalace() {
-    const addPalace = storage((state) => state.addPalace);
+export default function AddNewRoom({palace_id}: {palace_id: number}) {
+    const addRoom = storage((state) => state.addRoom);
     const [newTitle, setNewTitle] = useState('');
     const [modalVisible, setModalVisible] = useState(false);
-    const palaces = storage((state) => state.palaces);
+    const rooms = storage((state) => state.rooms);
 
-    const handleAddPalace = () => {
+    const handleAddRoom = () => {
         if (newTitle.trim()) {
-            addPalace(
+            addRoom(
                 {
-                    id: palaces.length > 0 ? Math.max(...palaces.map(p => p.id)) + 1 : 1,
-                    title: newTitle,
-                    path_to_image: null,
-                    pins: null,
-                    rooms: null,
+                    id: rooms.length > 0 ? Math.max(...rooms.map(p => p.id)) + 1 : 1,
+                    palace_id: palace_id,
+                    name: newTitle,
                 }
             )
             setNewTitle('')
@@ -33,17 +31,17 @@ export default function AddNewPalace() {
             <Modal visible={modalVisible} animationType="slide" transparent={true}>
                 <View style={styles.modalContainer}>
                     <View style={styles.modalContent}>
-                        <InputText label="Add new palace" get={newTitle} set={setNewTitle}/>
+                        <InputText label="Add new room" get={newTitle} set={setNewTitle}/>
 
                         <View style={styles.buttonRow}>
                             <PrimaryButton text="Cancel" onPressFunc={() => setModalVisible(false)} />
-                            <PrimaryButton text="Add Palace" onPressFunc={handleAddPalace} />
+                            <PrimaryButton text="Add Room" onPressFunc={handleAddRoom} />
                         </View>
                     </View>
                 </View>
             </Modal>
 
-            <PrimaryButton text="Add new palace" onPressFunc={() => setModalVisible(true)} />
+            <PrimaryButton text="Add new room" onPressFunc={() => setModalVisible(true)} />
         </View>
     )
 }

@@ -1,6 +1,7 @@
 import {StyleSheet, TextProps} from "react-native";
 import {black, grayPrimary, yellowPrimary, yellowPrimaryDarker} from "../../const/Colors";
 import {StyleProp, ViewStyle} from "react-native";
+import {rgbaColor} from "react-native-reanimated/lib/typescript/Colors";
 
 export interface ButtonInterface {
     text: string,
@@ -34,14 +35,15 @@ export const styles = StyleSheet.create({
         fontSize: 18,
         fontWeight: 800,
     },
-    // buttonSecondary: {
-    //     backgroundColor: grayPrimary,
-    // },
-    // buttonTextSecondary: {
-    //     color: grayPrimary,
-    //     fontSize: 16,
-    //     fontWeight: 'bold',
-    // },
+    buttonSecondary: {
+        backgroundColor: "rgba(0,0,0,0)",
+        borderColor: yellowPrimaryDarker,
+        borderWidth: 1,
+    },
+    buttonTextSecondary: {
+        color: yellowPrimary,
+        fontSize: 16,
+    },
     // buttonThird: {
     //     backgroundColor: "#fff",
     //     marginVertical: 5,
