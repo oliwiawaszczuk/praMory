@@ -1,9 +1,11 @@
-import {StyleSheet} from "react-native";
+import {StyleSheet, TextProps} from "react-native";
 import {black, grayPrimary, yellowPrimary, yellowPrimaryDarker} from "../../const/Colors";
+import {StyleProp, ViewStyle} from "react-native";
 
 export interface ButtonInterface {
     text: string,
     onPressFunc: any,
+    style?: StyleProp<ViewStyle>;
 }
 
 export interface ButtonIconInterface extends ButtonInterface {

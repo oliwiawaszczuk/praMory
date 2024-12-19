@@ -12,7 +12,7 @@ export default function HomeScreen({navigation}: {navigation: any}) {
     return (
         <View style={{flex: 1}}>
             <ScrollView style={{flex:1}}>
-                {palaces.map((item, index) => (<PalaceCard key={index} palace={item} onclick={() => navigation.navigate('PalaceDetail', { id: item.id })}/>))}
+                {palaces.map((item, index) => (<PalaceCard key={index} palace={item} navigation={navigation}/>))}
                 <PrimaryButton text="Settings" onPressFunc={() => navigation.navigate("Settings")}/>
             </ScrollView>
 
