@@ -41,8 +41,8 @@ export default function PalaceCard({palace, navigation}: { palace: Palace, navig
                     <View style={styles.modalContent}>
                         <InputText label="Enter new title" get={newTitle} set={setNewTitle}/>
                         <View style={styles.modalActions}>
-                            <PrimaryButton text="Save Changes" onPressFunc={handleSaveChanges} />
                             <PrimaryButton style={{backgroundColor: "#dd3737", borderColor: "#9f1616"}} text="Delete" onPressFunc={() => setVisibleConfirmDeleteModal(true)} />
+                            <PrimaryButton text="Save Changes" onPressFunc={handleSaveChanges} />
                         </View>
                     </View>
                 </View>
@@ -55,7 +55,7 @@ export default function PalaceCard({palace, navigation}: { palace: Palace, navig
             >
                 <TouchableOpacity activeOpacity={1} style={styles.modalBackground} onPress={() => setVisibleConfirmDeleteModal(false)}>
                     <View style={styles.modalContent}>
-                        <Text>Are you sure you want to delete this palace?</Text>
+                        <Text style={{fontSize: 16, marginBottom: 10}}>Are you sure you want to delete this palace?</Text>
                         <View style={styles.modalActions}>
                             <PrimaryButton text="Cancel" onPressFunc={() => {
                                 setVisibleConfirmDeleteModal(false)

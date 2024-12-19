@@ -35,8 +35,8 @@ export default function AddNewPalace() {
                         <InputText label="Add new palace" get={newTitle} set={setNewTitle}/>
 
                         <View style={styles.buttonRow}>
-                            <PrimaryButton text="Add Palace" onPressFunc={handleAddPalace} />
                             <PrimaryButton text="Cancel" onPressFunc={() => setModalVisible(false)} />
+                            <PrimaryButton text="Add Palace" onPressFunc={handleAddPalace} />
                         </View>
                     </View>
                 </View>
