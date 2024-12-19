@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import HomeScreen from "./screens/Home";
@@ -7,7 +7,9 @@ import {yellowPrimary, grayPrimary, greenPrimary, grayPrimaryDarker, black, yell
 import SettingsScreen from "./screens/Settings";
 import PalaceDetail from "./screens/PalaceDetail";
 import ImageLook from "./screens/ImageLook";
-import {TouchableOpacity, Image} from "react-native";
+import {TouchableOpacity, Image, View} from "react-native";
+import { useFonts } from 'expo-font';
+import {Text} from "./components/Text/Default";
 
 const Stack = createNativeStackNavigator();
 
@@ -24,6 +26,21 @@ const headerBackgroundColor = yellowPrimary
 const headerTextColor = black
 
 export default function App() {
+    const [loaded, error] = useFonts({
+        'Engagement-Regular': require('./assets/fonts/Engagement-Regular.ttf'),
+        'LeagueScript-Regular': require('./assets/fonts/LeagueScript-Regular.ttf'),
+        'MountainsofChristmas-Regular': require('./assets/fonts/MountainsofChristmas-Regular.ttf'),
+        'MountainsofChristmas-Bold': require('./assets/fonts/MountainsofChristmas-Bold.ttf'),
+        'Rock3D-Regular': require('./assets/fonts/Rock3D-Regular.ttf'),
+        'RubikPuddles-Regular': require('./assets/fonts/RubikPuddles-Regular.ttf'),
+        'Faustina-Regular': require('./assets/fonts/Faustina-Regular.ttf'),
+        'FunnelDisplay-Regular': require('./assets/fonts/FunnelDisplay-Regular.ttf'),
+        'LeagueSpartan-Regular': require('./assets/fonts/LeagueSpartan-Regular.ttf'),
+        'Lexend-Regular': require('./assets/fonts/Lexend-Regular.ttf'),
+        'Mynerve-Regular': require('./assets/fonts/Mynerve-Regular.ttf'),
+        'ShadowsIntoLightTwo-Regular': require('./assets/fonts/ShadowsIntoLightTwo-Regular.ttf'),
+        'Tomorrow-Regular': require('./assets/fonts/Tomorrow-Regular.ttf'),
+    });
 
     return (
         <NavigationContainer linking={linking}>

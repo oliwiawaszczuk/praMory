@@ -8,5 +8,7 @@ export function Text(props: TextProps) {
 const styles = StyleSheet.create({
     defaultText: {
         color: '#fff',
+        fontFamily: "LeagueSpartan-Regular",
+        fontSize: 16,
     },
 });

@@ -33,7 +33,7 @@ export const styles = StyleSheet.create({
     buttonTextPrimary: {
         color: black,
         fontSize: 18,
-        fontWeight: 800,
+        fontFamily: "FunnelDisplay-Regular",
     },
     buttonSecondary: {
         backgroundColor: "rgba(0,0,0,0)",
@@ -43,6 +43,7 @@ export const styles = StyleSheet.create({
     buttonTextSecondary: {
         color: yellowPrimary,
         fontSize: 16,
+        fontFamily: "Faustina-Regular",
     },
     // buttonThird: {
     //     backgroundColor: "#fff",
