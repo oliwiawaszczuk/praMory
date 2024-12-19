@@ -8,6 +8,7 @@ import PrimaryButton from "./components/Buttons/Primary";
 import {log} from "expo/build/devtools/logger";
 import SettingsScreen from "./screens/Settings";
 import PalaceDetail from "./screens/PalaceDetail";
+import ImageLook from "./screens/ImageLook";
 
 const Stack = createNativeStackNavigator();
 
@@ -42,6 +43,7 @@ export default function App() {
             >
                 <Stack.Screen name="Home" component={HomeScreen} options={{title: 'praMory' }}/>
                 <Stack.Screen name="PalaceDetail" component={PalaceDetail} options={{title: 'Palace Detail' }}/>
+                <Stack.Screen name="ImageLook" component={ImageLook} options={{title: 'Image Look' }}/>
                 <Stack.Screen name="Settings" component={SettingsScreen} options={{title: 'Settings' }}/>
             </Stack.Navigator>
         </NavigationContainer>

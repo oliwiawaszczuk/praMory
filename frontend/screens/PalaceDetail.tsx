@@ -1,4 +1,4 @@
-import {View, Image, ScrollView, StyleSheet, Animated, Dimensions } from "react-native"
+import {View, Image, ScrollView, StyleSheet, Animated, Dimensions, TouchableOpacity} from "react-native"
 import React, {useEffect, useState} from "react"
 import {useRoute} from "@react-navigation/native"
 import {Text} from "../components/Text/Default"
@@ -70,12 +70,12 @@ export default function PalaceDetail({navigation}: { navigation: any }) {
 
     return (
         <View style={{flex: 1}}>
-            <Animated.Image
+            <TouchableOpacity activeOpacity={0.9} onLongPress={() => navigation.navigate('ImageLook', { pathToImage: palaceImage })}><Animated.Image
                 // @ts-ignore
                 source={{uri: palaceImage}}
                 style={[styles.absImage, {height: imageHeight}]}
                 resizeMode="cover"
-            />
+            /></TouchableOpacity>
             <HorizontalLine color={yellowPrimaryDarker} lineHeight={4}/>
             <ScrollView
                 style={styles.scrollView}
