@@ -1,22 +1,36 @@
-import { View, Image } from "react-native"
-import React, { useEffect, useState } from "react"
-import { useRoute } from "@react-navigation/native"
-import { Text } from "../components/Text/Default"
-import { Palace } from "../types/Palace"
-import { Loading } from "../components/Loading"
-import { storage } from "../store/storage"
+import {View, Image, ScrollView, StyleSheet, Animated, Dimensions } from "react-native"
+import React, {useEffect, useState} from "react"
+import {useRoute} from "@react-navigation/native"
+import {Text} from "../components/Text/Default"
+import {Palace} from "../types/Palace"
+import {Loading} from "../components/Loading"
+import {storage} from "../store/storage"
 import PrimaryButton from "../components/Buttons/Primary"
-import { launchImageLibrary } from 'react-native-image-picker'
+import {launchImageLibrary} from 'react-native-image-picker'
+import HorizontalLine from "../components/HorizontalLine";
+import {yellowPrimary, yellowPrimaryDarker} from "../const/Colors";
 
-export default function PalaceDetail({ navigation }: {navigation: any}) {
+const PALACE_IMAGE_HEIGHT: number = 400
+const PALACE_IMAGE_HEIGHT_MIN: number = 100
+
+const { height: screenHeight } = Dimensions.get("window");
+
+export default function PalaceDetail({navigation}: { navigation: any }) {
     const route = useRoute()
-    const { id } = route.params as { id: number }
+    const {id} = route.params as { id: number }
 
     const [palaceImage, setPalaceImage] = useState<string | null>(null)
 
     const [palace, setPalace] = useState<Palace | null>(null)
     const palaces = storage((state) => state.palaces)
     const updatePalaceImage = storage((state) => state.updatePalaceImage)
+
+    const scrollY = new Animated.Value(0)
+    const imageHeight = scrollY.interpolate({
+        inputRange: [0, PALACE_IMAGE_HEIGHT],
+        outputRange: [PALACE_IMAGE_HEIGHT, PALACE_IMAGE_HEIGHT_MIN],
+        extrapolate: "clamp",
+    })
 
     useEffect(() => {
         const foundPalace = palaces.find((item) => item.id === id)
@@ -25,12 +39,12 @@ export default function PalaceDetail({ navigation }: {navigation: any}) {
 
     useEffect(() => {
         if (palace) {
-            navigation.setOptions({ title: `Palace: ${palace.title}` })
+            navigation.setOptions({title: `Palace: ${palace.title}`})
             if (!palaceImage) setPalaceImage(palace.path_to_image)
         }
     }, [palace, navigation])
 
-    if (!palace) return <Loading />
+    if (!palace) return <Loading/>
 
     const handlePickImage = () => {
         launchImageLibrary(
@@ -51,17 +65,48 @@ export default function PalaceDetail({ navigation }: {navigation: any}) {
                     updatePalaceImage(palace.id, pickedPhoto.uri)
                 }
             }
-        );
-    };
+        )
+    }
 
     return (
-        <View>
-            <Text>Palace ID: {id}</Text>
-            <Text>Palace Title: {palace.title}</Text>
+        <View style={{flex: 1}}>
+            <Animated.Image
+                // @ts-ignore
+                source={{uri: palaceImage}}
+                style={[styles.absImage, {height: imageHeight}]}
+                resizeMode="cover"
+            />
+            <HorizontalLine color={yellowPrimaryDarker} lineHeight={4}/>
+            <ScrollView
+                style={styles.scrollView}
+                // contentContainerStyle={styles.contentContainer}
+                onScroll={Animated.event(
+                    [{nativeEvent: {contentOffset: {y: scrollY}}}],
+                    {useNativeDriver: false}
+                )}
+                scrollEventThrottle={16}
+                keyboardShouldPersistTaps="handled"
+            >
 
-            <PrimaryButton text="Wybierz zdjęcie z galerii" onPressFunc={handlePickImage} />
-            {palaceImage && <Image source={{ uri: palaceImage }} style={{ width: 200, height: 200, resizeMode: 'contain' }} />}
-            <Text>Palace image uri: {palaceImage}</Text>
+                <PrimaryButton text="Pick palace bacground image from gallery" onPressFunc={handlePickImage}/>
+            </ScrollView>
         </View>
     )
 }
+
+const styles = StyleSheet.create({
+    absImage: {
+        width: "100%",
+    },
+    image: {
+        width: 200,
+        height: 200,
+        resizeMode: "contain",
+        margin: 10,
+    },
+    scrollView: {
+        paddingHorizontal: 15,
+        marginVertical: 10,
+        flex: 1,
+    },
+});

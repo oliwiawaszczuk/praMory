@@ -10,7 +10,7 @@ export default function HomeScreen({navigation}: {navigation: any}) {
     const palaces = storage((state) => state.palaces);
 
     return (
-        <View style={{flex: 1}}>
+        <View style={{flex: 1, margin: 15}}>
             <ScrollView style={{flex:1}}>
                 {palaces.map((item, index) => (<PalaceCard key={index} palace={item} navigation={navigation}/>))}
                 <PrimaryButton text="Settings" onPressFunc={() => navigation.navigate("Settings")}/>

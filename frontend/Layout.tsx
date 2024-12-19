@@ -12,7 +12,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     // const currentRoute = routes[routes.length - 1].name;
 
     return (
-        <View style={{padding: 15, backgroundColor: backgroundColor, flex: 1}}>
+        <View style={{padding: 0, backgroundColor: backgroundColor, flex: 1}}>
 
             {children}
 
