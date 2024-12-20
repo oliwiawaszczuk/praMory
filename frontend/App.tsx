@@ -10,6 +10,7 @@ import ImageLook from "./screens/ImageLook";
 import {TouchableOpacity, Image, View} from "react-native";
 import { useFonts } from 'expo-font';
 import {Text} from "./components/Text/Default";
+import RoomDetail from "./screens/RoomDetail";
 
 const Stack = createNativeStackNavigator();
 
@@ -62,6 +63,7 @@ export default function App() {
             >
                 <Stack.Screen name="Home" component={HomeScreen} options={{title: 'praMory' }}/>
                 <Stack.Screen name="PalaceDetail" component={PalaceDetail} options={{title: 'Palace Detail' }}/>
+                <Stack.Screen name="RoomDetail" component={RoomDetail} options={{title: 'Room Detail' }}/>
                 <Stack.Screen name="ImageLook" component={ImageLook} options={{title: 'Image Look' }}/>
                 <Stack.Screen name="Settings" component={SettingsScreen} options={{title: 'Settings' }}/>
             </Stack.Navigator>

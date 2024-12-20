@@ -11,8 +11,10 @@ interface StorageInterface {
     removePalace: (id: number) => void
     addRoom: (room: Room) => void
     removeRoom: (id: number) => void
-    updatePalace: (id: number, newTitle: string) => void
+    updateRoomName: (id: number, newName: string) => void
+    updatePalaceTitle: (id: number, newTitle: string) => void
     updatePalaceImage: (id: number, newImagePath: string) => void
+    updatePalaceNote: (id: number, newNote: string) => void
 }
 
 export const storage = create<StorageInterface>()(
@@ -33,7 +35,7 @@ export const storage = create<StorageInterface>()(
                     rooms: state.rooms.filter((room) => room.palace_id !== id ),
                 }))
             },
-            updatePalace: (id: number, newTitle: string) => {
+            updatePalaceTitle: (id: number, newTitle: string) => {
                 set((state) => ({
                     palaces: state.palaces.map((palace) =>
                         palace.id === id ? { ...palace, title: newTitle } : palace
@@ -47,6 +49,13 @@ export const storage = create<StorageInterface>()(
                     ),
                 }))
             },
+            updatePalaceNote: (id: number, newNote: string) => {
+                set((state) => ({
+                    palaces: state.palaces.map((palace) =>
+                        palace.id === id ? { ...palace, note: newNote } : palace
+                    ),
+                }))
+            },
 
         // MODIFICATION ROOMS
             addRoom: (newRoom: Room) => {
@@ -57,6 +66,13 @@ export const storage = create<StorageInterface>()(
             removeRoom: (id: number) => {
                 set((state) => ({
                     rooms: state.rooms.filter((room) => room.id !== id ),
+                }))
+            },
+            updateRoomName: (id: number, newName: string) => {
+                set((state) => ({
+                    rooms: state.rooms.map((room) =>
+                        room.id === id ? { ...room, name: newName } : room
+                    ),
                 }))
             },
         }),

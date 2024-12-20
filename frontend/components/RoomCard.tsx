@@ -7,25 +7,27 @@ import {storage} from "../store/storage";
 import {Pressable} from "react-native-gesture-handler";
 import {InputText} from "./Input/InputText";
 import PrimaryButton from "./Buttons/Primary";
+import {Room} from "../types/Room";
 
-export default function PalaceCard({palace, navigation}: { palace: Palace, navigation: any }) {
+export default function RoomCard({room, navigation}: { room: Room, navigation: any }) {
     const [visibleEditPalaceCardModal, setVisibleEditPalaceCardModal] = useState(false);
     const [visibleConfirmDeleteModal, setVisibleConfirmDeleteModal] = useState(false);
-    const [newTitle, setNewTitle] = useState(palace.title)
-    const removePalace = storage((state) => state.removePalace)
-    const updatePalaceTitle = storage((state) => state.updatePalaceTitle)
+    const [newTitle, setNewTitle] = useState(room.name)
+    const removeRoom = storage((state) => state.removeRoom)
+    const updateRoomName = storage((state) => state.updateRoomName)
 
-    function redirectToPalaceDetail(id: number) {
-        navigation.navigate('PalaceDetail', { id })
+    function redirectToRoomDetail(id: number) {
+        // console.log("wef")
+        navigation.navigate('RoomDetail', { id })
     }
 
     function handleSaveChanges() {
-        updatePalaceTitle(palace.id, newTitle)
+        updateRoomName(room.id, newTitle)
         setVisibleEditPalaceCardModal(false)
     }
 
     function handleRemovePalace() {
-        removePalace(palace.id)
+        removeRoom(room.id)
         setVisibleEditPalaceCardModal(false)
         setVisibleConfirmDeleteModal(false)
     }
@@ -39,7 +41,7 @@ export default function PalaceCard({palace, navigation}: { palace: Palace, navig
             >
                 <View style={styles.modalBackground}>
                     <View style={styles.modalContent}>
-                        <InputText label="Enter new title" get={newTitle} set={setNewTitle}/>
+                        <InputText label="Enter new room name" get={newTitle} set={setNewTitle}/>
                         <View style={styles.modalActions}>
                             <PrimaryButton style={{backgroundColor: "#dd3737", borderColor: "#9f1616"}} text="Delete" onPressFunc={() => setVisibleConfirmDeleteModal(true)} />
                             <PrimaryButton text="Save Changes" onPressFunc={handleSaveChanges} />
@@ -55,7 +57,7 @@ export default function PalaceCard({palace, navigation}: { palace: Palace, navig
             >
                 <TouchableOpacity activeOpacity={1} style={styles.modalBackground} onPress={() => setVisibleConfirmDeleteModal(false)}>
                     <View style={styles.modalContent}>
-                        <Text style={{fontSize: 16, marginBottom: 10}}>Are you sure you want to delete this palace?</Text>
+                        <Text style={{fontSize: 16, marginBottom: 10}}>Are you sure you want to delete this room?</Text>
                         <View style={styles.modalActions}>
                             <PrimaryButton text="Cancel" onPressFunc={() => {
                                 setVisibleConfirmDeleteModal(false)
@@ -69,45 +71,47 @@ export default function PalaceCard({palace, navigation}: { palace: Palace, navig
 
             <TouchableOpacity
                 activeOpacity={0.9} style={styles.container}
-                onPress={() => redirectToPalaceDetail(palace.id)}
+                onPress={() => redirectToRoomDetail(room.id)}
                 onLongPress={() => setVisibleEditPalaceCardModal(true)}
             >
                 <View style={styles.imageContainer}>
-                    {palace.path_to_image && <Image
-                        source={{uri: palace.path_to_image}}
-                        style={styles.image}
-                        resizeMode="cover"
-                    />}
+                    {/*{room.path_to_image && <Image*/}
+                    {/*    source={{uri: room.path_to_image}}*/}
+                    {/*    style={styles.image}*/}
+                    {/*    resizeMode="cover"*/}
+                    {/*/>}*/}
                 </View>
 
-                <View style={styles.textContainer}>
-                    <Text style={styles.title}>{palace.title}</Text>
+                <View>
+                    <Text style={styles.title}>{room.name}</Text>
                 </View>
 
-                <View style={styles.iconContainer}>
-                    <View style={styles.circleIcon}/>
-                </View>
+                {/*<View style={styles.iconContainer}>*/}
+                {/*    <View style={styles.circleIcon}/>*/}
+                {/*</View>*/}
             </TouchableOpacity>
         </View>
     )
 }
 
+
 const styles= StyleSheet.create({
     container: {
-        flexDirection: 'row',
+        flexDirection: 'column',
         alignItems: 'center',
-        justifyContent: 'space-between',
+        justifyContent: 'center',
         backgroundColor: greenPrimaryDarker,
         borderRadius: 20,
         padding: 10,
         marginVertical: 10,
-        position: 'relative',
+        // position: 'relative',
+        width: 110,
     },
     imageContainer: {
         width: 80,
         height: 80,
         borderRadius: 10,
-        overflow: 'hidden',
+        // overflow: 'hidden',
         backgroundColor: greenPrimary,
     },
     image: {
@@ -115,13 +119,13 @@ const styles= StyleSheet.create({
         height: '100%',
     },
     textContainer: {
-        flex: 1,
-        marginLeft: 15,
+
     },
     title: {
         color: yellowPrimary,
+        marginTop: 5,
         fontSize: 18,
-        fontWeight: 'bold',
+        fontFamily: "LeagueSpartan-Regular",
     },
     iconContainer: {
         position: 'absolute',

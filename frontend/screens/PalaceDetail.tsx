@@ -1,4 +1,4 @@
-import {View, Image, ScrollView, StyleSheet, Animated, Dimensions, TouchableOpacity} from "react-native"
+import {View, Image, ScrollView, StyleSheet, Animated, Dimensions, TouchableOpacity, Modal} from "react-native"
 import React, {useEffect, useRef, useState} from "react"
 import {useRoute} from "@react-navigation/native"
 import {Text} from "../components/Text/Default"
@@ -8,15 +8,16 @@ import {storage} from "../store/storage"
 import PrimaryButton from "../components/Buttons/Primary"
 import {launchImageLibrary} from 'react-native-image-picker'
 import HorizontalLine from "../components/HorizontalLine";
-import {greenPrimary, yellowPrimary, yellowPrimaryDarker} from "../const/Colors";
+import {greenPrimary, greenPrimaryDarker, yellowPrimary, yellowPrimaryDarker} from "../const/Colors";
 import AddNewRoom from "../components/AddNewRoom";
 import SecondaryButton from "../components/Buttons/Secondary";
 import LineToOpen from "../components/LineToOpen";
+import RoomCard from "../components/RoomCard";
+import NoteInput from "../components/Text/Note";
+import {MIN_NOTE_HEIGHT, MAX_NOTE_HEIGHT, ONE_STEP_HEIGHT} from "../const/Const";
 
 const PALACE_IMAGE_HEIGHT: number = 400
 const PALACE_IMAGE_HEIGHT_MIN: number = 100
-
-const {height: screenHeight} = Dimensions.get("window");
 
 export default function PalaceDetail({navigation}: { navigation: any }) {
     const route = useRoute()
@@ -28,9 +29,14 @@ export default function PalaceDetail({navigation}: { navigation: any }) {
     const palaces = storage((state) => state.palaces)
     const rooms = storage((state) => state.rooms)
     const updatePalaceImage = storage((state) => state.updatePalaceImage)
+    const updatePalaceNote = storage((state) => state.updatePalaceNote)
 
     const [noteVisible, setNoteVisible] = useState<boolean>(false)
     const [roomsVisible, setRoomsVisible] = useState<boolean>(false)
+
+    const [noteEditVisible, setNoteEditVisible] = useState<boolean>(false)
+    const [noteEditText, setNoteEditText] = useState<string>("")
+    const [noteHeight, setNoteHeight] = useState<number>(MIN_NOTE_HEIGHT)
 
     // To image display
     const scrollY = new Animated.Value(0)
@@ -49,7 +55,10 @@ export default function PalaceDetail({navigation}: { navigation: any }) {
     useEffect(() => {
         if (palace) {
             navigation.setOptions({title: `Palace: ${palace.title}`})
-            if (!palaceImage) setPalaceImage(palace.path_to_image)
+            if (!palaceImage) {
+                setPalaceImage(palace.path_to_image)
+                setNoteEditText(palace.note ? palace.note : "")
+            }
         }
     }, [palace, navigation])
 
@@ -84,7 +93,8 @@ export default function PalaceDetail({navigation}: { navigation: any }) {
         <View style={{flex: 1}}>
             {palaceImage && (
                 <>
-                    <TouchableOpacity activeOpacity={0.9} onLongPress={() => navigation.navigate('ImageLook', {pathToImage: palaceImage})}>
+                    <TouchableOpacity activeOpacity={0.9}
+                                      onLongPress={() => navigation.navigate('ImageLook', {pathToImage: palaceImage})}>
                         <Animated.Image
                             // @ts-ignore
                             source={{uri: palaceImage}}
@@ -108,32 +118,83 @@ export default function PalaceDetail({navigation}: { navigation: any }) {
                 <LineToOpen label="Rooms" visible={roomsVisible} setVisible={setRoomsVisible}/>
                 {roomsVisible && (
                     <View style={[styles.dropdown]}>
-                        <AddNewRoom palace_id={id}/>
+                        <View style={{flexDirection: 'row', justifyContent: 'space-between', width: '100%'}}>
+                            <SmallButton onPress={() => {}}/>
+                            <View style={{flex: 6, height: '100%'}}>
+                                <AddNewRoom palace_id={id}/>
+                            </View>
+                            <SmallButton onPress={() => {}}/>
+                        </View>
 
-                        {filteredRooms.map((room) => (
-                            room.id < 10 ? (
-                                <View key={room.id}>
-                                    <Text>{room.id} - {room.name}</Text>
-                                </View>
-                            ) : null
-                        ))}
+
+                        <View style={styles.roomCardContainer}>
+                            {filteredRooms.map((room) => (
+                                <RoomCard key={room.id} room={room} navigation={navigation}/>
+                            ))}
+                        </View>
                     </View>
                 )}
+
+                <Modal visible={noteEditVisible} transparent={true} onRequestClose={() => setNoteEditVisible(false)}>
+                    <TouchableOpacity activeOpacity={0.9} style={styles.overlay} onPress={() => setNoteEditVisible(false)}>
+                        <View style={styles.modalContent}>
+                            <NoteInput startValue={noteEditText} onChange={(text: string) => { setNoteEditText(text) }}/>
+
+                            <View style={styles.buttonContainer}>
+                                <PrimaryButton style={styles.button} text="Save" onPressFunc={() => {
+                                    updatePalaceNote(palace.id, noteEditText)
+                                    setNoteEditVisible(false)
+                                }}/>
+                                <PrimaryButton style={styles.button} text="Cancel" onPressFunc={() => setNoteEditVisible(false)}/>
+                            </View>
+                        </View>
+                    </TouchableOpacity>
+                </Modal>
 
                 <LineToOpen label="Notes" visible={noteVisible} setVisible={setNoteVisible}/>
-                {noteVisible && (
+                {/*{noteVisible && <NoteInput value={palace.note} onChange={updatePalaceNote}/>}*/}
+                {noteVisible &&
                     <View>
-                        <Text>notenotenote</Text>
+                        {palace.note && <Text style={[styles.textAsNote, {height: noteHeight}]}>{palace.note}</Text>}
+                        <View style={{flexDirection: 'row', justifyContent: 'space-between', flex: 1}}>
+                            <View style={styles.moreOptionsForNote}>
+                                <PrimaryButton style={styles.moreOptionsForNoteButton} text="^" onPressFunc={() => setNoteHeight(Math.min(noteHeight + ONE_STEP_HEIGHT, MAX_NOTE_HEIGHT))}/>
+                                <PrimaryButton style={styles.moreOptionsForNoteButton} text="v" onPressFunc={() => setNoteHeight(Math.max(noteHeight - ONE_STEP_HEIGHT, MIN_NOTE_HEIGHT))}/>
+                            </View>
+                            <PrimaryButton style={{flex: 1, marginHorizontal: 10, marginVertical: 15}} text="Edit note" onPressFunc={() => setNoteEditVisible(true)}/>
+                        </View>
                     </View>
-                )}
-
+                }
                 <SecondaryButton text="Pick palace bacground image from gallery" onPressFunc={handlePickImage}/>
             </ScrollView>
         </View>
     )
 }
 
+function SmallButton({onPress}: { onPress: () => void }) {
+    return (
+        <TouchableOpacity style={styles.smallButton} onPress={onPress}>
+            <View style={styles.smallButtonView}>
+                {/*<Text>^</Text>*/}
+            </View>
+        </TouchableOpacity>
+    )
+}
+
 const styles = StyleSheet.create({
+    smallButton: {
+        flex: 1,
+        padding: 10,
+        height: "100%",
+    },
+    smallButtonView: {
+        borderColor: yellowPrimaryDarker,
+        borderWidth: 2,
+        borderRadius: 14,
+        aspectRatio: 1,
+        // justifyContent: "center",
+        // alignItems: "center",
+    },
     absImage: {
         width: "100%",
     },
@@ -151,5 +212,52 @@ const styles = StyleSheet.create({
     dropdown: {
         padding: 10,
         elevation: 2,
+    },
+    roomCardContainer: {
+        flexDirection: 'row',
+        flex: 1,
+        flexWrap: "wrap",
+        justifyContent: 'space-between',
+        alignItems: 'flex-start',
+    },
+    overlay: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: "rgba(0, 0, 0, 0.5)",
+    },
+    modalContent: {
+        width: "90%",
+        borderRadius: 10,
+        padding: 20,
+        shadowOffset: {width: 0, height: 2},
+        shadowOpacity: 0.3,
+        shadowRadius: 4,
+        flexDirection: "column",
+    },
+    buttonContainer: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        marginTop: 20,
+    },
+    button: {
+        flex: 1,
+        marginHorizontal: 10,
+    },
+    textAsNote: {
+        margin: 5,
+        padding: 10,
+        borderColor: greenPrimary,
+        borderWidth: 1,
+        borderRadius: 10,
+    },
+    moreOptionsForNote: {
+        flex: 2,
+        // marginHorizontal: 10,
+        padding: 10,
+        flexDirection: "row",
+    },
+    moreOptionsForNoteButton: {
+        marginHorizontal: 4,
     },
 });

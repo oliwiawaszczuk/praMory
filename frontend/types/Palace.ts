@@ -7,4 +7,5 @@ export type Palace = {
     path_to_image: string | null
     pins: ImagePalacePin[] | null
     rooms: Room[] | null
+    note: string | null
 }

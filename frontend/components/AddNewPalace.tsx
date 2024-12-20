@@ -21,6 +21,7 @@ export default function AddNewPalace() {
                     path_to_image: null,
                     pins: null,
                     rooms: null,
+                    note: null,
                 }
             )
             setNewTitle('')
