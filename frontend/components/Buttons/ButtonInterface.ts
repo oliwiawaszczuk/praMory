@@ -33,7 +33,7 @@ export const styles = StyleSheet.create({
     buttonTextPrimary: {
         color: black,
         fontSize: 18,
-        fontFamily: "FunnelDisplay-Regular",
+        fontFamily: "Lexend-Regular",
     },
     buttonSecondary: {
         backgroundColor: "rgba(0,0,0,0)",
