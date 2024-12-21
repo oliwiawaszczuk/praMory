@@ -25,9 +25,8 @@ import {MIN_NOTE_HEIGHT, MAX_NOTE_HEIGHT, ONE_STEP_HEIGHT} from "../const/Const"
 import RoomCardsSlider from "../components/RoomCardsSlider";
 import RoomCard from "../components/RoomCard";
 import Slider from '@react-native-community/slider'
-import {valueSetter} from "react-native-reanimated/lib/typescript/valueSetter";
-import {Point} from "../types/Point";
 import {ImagePalacePin} from "../types/ImagePin";
+import {scaleActualToDisplayed} from "../utils/ScalePoint";
 
 const PALACE_IMAGE_HEIGHT = 600
 const PALACE_IMAGE_HEIGHT_MIN = 54
@@ -45,6 +44,8 @@ export default function PalaceDetail({navigation}: { navigation: any }) {
     const [imageSize, setImageSize] = useState<{width: number, height: number}>({ width: 0, height: 0 })
     const [imageScale, setImageScale] = useState<number>(1)
     const [activePin, setActivePin] = useState<ImagePalacePin | null>(null)
+    const [displayedPins, setDisplayedPins] = useState<ImagePalacePin[]>([])
+    const [sliderValue, setSliderValue] = useState<number>(1)
 
     const [roomsVisible, setRoomsVisible] = useState<boolean>(false)
     const [noteEditVisible, setNoteEditVisible] = useState<boolean>(false)
@@ -121,12 +122,28 @@ export default function PalaceDetail({navigation}: { navigation: any }) {
     }
 
     const handleImageLoad = (event: any) => {
-        const {width, height} = event.nativeEvent.source
-        setImageSize({width, height})
+        if (imageSize.width === 0) {
+            const {width, height} = event.nativeEvent.source
+            if (width > 0 && height > 0) {
+                setImageSize({width, height})
+            }
+        }
     }
 
-    const scaleX = (x: number) => (x / imageSize.width) * (Dimensions.get('window').width * imageScale)
-    const scaleY = (y: number) => (y / imageSize.height) * (calculatedHeight * imageScale)
+    useEffect(() => {
+        if (palace && imageSize.width > 0 && imageScale > 0) {
+            const newDisplayedPins = palace.pins.map((pin) => ({
+                ...pin,
+                position: scaleActualToDisplayed(pin.position, imageSize, imageScale),
+            }))
+            setDisplayedPins(newDisplayedPins)
+        }
+    }, [palace, imageSize, imageScale])
+
+    useEffect(() => {
+        if(!isImageStatic)
+            setSliderValue(imageScale)
+    }, [isImageStatic])
 
     const filteredRooms = rooms.filter(room => room.palace_id === id)
 
@@ -151,29 +168,29 @@ export default function PalaceDetail({navigation}: { navigation: any }) {
                             style={[styles.absImage, {height: imageAnimationHeight}]}
                             resizeMode="cover"
                         /> : <ImageBackground
-                            source={{ uri: palaceImage }}
-                            resizeMode="contain"
-                            style={{ width: screenWidth/imageScale, height: calculatedHeight/imageScale }}
-                            onLoad={handleImageLoad}
-                        >
-                            <View style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}>
-                                {palace.pins.map((pin, index) => (
-                                    <TouchableOpacity
-                                        key={index}
-                                        onPress={() => setActivePin(pin)}
-                                        style={{
-                                            position: 'absolute',
-                                            left: scaleX(pin.position.x),
-                                            top: scaleY(pin.position.y),
-                                            width: 12 / imageScale,
-                                            height: 12 / imageScale,
-                                            borderRadius: 10,
-                                            backgroundColor: pinsColor, //pin === activePin ? activePinColor :
-                                        }}
-                                    />
-                                ))}
-                            </View>
-                        </ImageBackground>}
+                                source={{ uri: palaceImage }}
+                                resizeMode="contain"
+                                style={{ width: screenWidth / imageScale, height: calculatedHeight / imageScale }}
+                                onLoad={handleImageLoad}
+                            >
+                                <View style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}>
+                                    {displayedPins.map((pin, index) => (
+                                        <TouchableOpacity
+                                            key={index}
+                                            onPress={() => setActivePin(pin)}
+                                            style={{
+                                                position: 'absolute',
+                                                left: pin.position.x,
+                                                top: pin.position.y,
+                                                width: 12 / imageScale,
+                                                height: 12 / imageScale,
+                                                borderRadius: 10,
+                                                backgroundColor: pin.position.x === activePin?.position.x && pin.position.y === activePin?.position.y ? activePinColor : pinsColor,
+                                            }}
+                                        />
+                                    ))}
+                                </View>
+                            </ImageBackground>}
                     </TouchableOpacity>
                     {!isImageStatic ?
                         <View {...panResponder.panHandlers} style={styles.dragLine}>
@@ -185,6 +202,7 @@ export default function PalaceDetail({navigation}: { navigation: any }) {
                                 style={styles.slider}
                                 minimumValue={1}
                                 maximumValue={5}
+                                value={sliderValue}
                                 onValueChange={handleSliderChange}
                                 minimumTrackTintColor="rgba(0, 0, 0, 0)"
                                 maximumTrackTintColor="rgba(0, 0, 0, 0)"

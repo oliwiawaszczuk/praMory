@@ -12,6 +12,7 @@ import {activePinColor} from "../const/Colors";
 import PrimaryButton from "../components/Buttons/Primary";
 import {ImagePalacePin} from "../types/ImagePin";
 import {useNavigation} from "@react-navigation/native";
+import {scaleActualToDisplayed, scaleDisplayedToActual} from "../utils/ScalePoint";
 
 export default function LinkPinToImage() {
     const navigation = useNavigation()
@@ -34,9 +35,9 @@ export default function LinkPinToImage() {
     useEffect(() => {
         const existingPin = palace.pins?.find(pin => pin.room_id === room_id)
         if (existingPin) {
-            setClickPosition(existingPin.position)
+            setClickPosition(scaleActualToDisplayed(existingPin.position, imageSize, 1))
         }
-    }, [palace, room_id])
+    }, [palace, room_id, imageSize])
 
     const handleImageLoad = (event: any) => {
         const {width, height} = event.nativeEvent.source
@@ -50,9 +51,11 @@ export default function LinkPinToImage() {
 
     const handleSavePosition = () => {
         if (clickPosition) {
+            const imageActualPosition: Point = scaleDisplayedToActual(clickPosition, imageSize, 1)
+
             const imagePalacePin: ImagePalacePin = {
                 room_id: room_id,
-                position: clickPosition,
+                position: imageActualPosition,
             }
             addPinRoomToPalace(palace.id, imagePalacePin)
             navigation.goBack()
