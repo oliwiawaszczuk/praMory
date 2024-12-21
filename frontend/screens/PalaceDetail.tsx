@@ -21,7 +21,7 @@ import SecondaryButton from "../components/Buttons/Secondary"
 import LineToOpen from "../components/LineToOpen"
 import RoomCardCover from "../components/RoomCardCover"
 import NoteInput from "../components/Text/Note"
-import {MIN_NOTE_HEIGHT, MAX_NOTE_HEIGHT, ONE_STEP_HEIGHT} from "../const/Const"
+import {MIN_NOTE_HEIGHT, MAX_NOTE_HEIGHT, ONE_STEP_HEIGHT, PIN_SIZE} from "../const/Const"
 import RoomCardsSlider from "../components/RoomCardsSlider";
 import RoomCard from "../components/RoomCard";
 import Slider from '@react-native-community/slider'
@@ -182,8 +182,8 @@ export default function PalaceDetail({navigation}: { navigation: any }) {
                                                 position: 'absolute',
                                                 left: pin.position.x,
                                                 top: pin.position.y,
-                                                width: 12 / imageScale,
-                                                height: 12 / imageScale,
+                                                width: PIN_SIZE / imageScale,
+                                                height: PIN_SIZE / imageScale,
                                                 borderRadius: 10,
                                                 backgroundColor: pin.position.x === activePin?.position.x && pin.position.y === activePin?.position.y ? activePinColor : pinsColor,
                                             }}
@@ -214,6 +214,22 @@ export default function PalaceDetail({navigation}: { navigation: any }) {
                 </View>
             )}
             <ScrollView style={styles.scrollView} keyboardShouldPersistTaps="handled">
+                {activePin && isImageStatic && (
+                    <View>
+                        <TouchableOpacity  activeOpacity={0.8} onPress={() => setActivePin(null)} style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                            <View style={{borderTopWidth: 4, borderStyle: "dotted", width: "100%", borderTopColor: yellowPrimaryDarker}}></View>
+                            <View style={{borderTopWidth: 4, borderStyle: "dotted", width: "98%", borderTopColor: yellowPrimaryDarker}}></View>
+                            <View style={{borderTopWidth: 4, borderStyle: "dotted", width: "100%", borderTopColor: yellowPrimaryDarker}}></View>
+                            <View style={{borderTopWidth: 4, borderStyle: "dotted", width: "98%", borderTopColor: yellowPrimaryDarker}}></View>
+                        </TouchableOpacity>
+                        <RoomCardCover
+                            // @ts-ignore
+                            room={rooms.find((room) => room.id === activePin.room_id)}
+                            navigation={navigation}
+                        />
+                    </View>
+                )}
+
                 <LineToOpen label="Rooms" visible={roomsVisible} setVisible={setRoomsVisible}/>
                 <Modal visible={noteEditVisible} transparent onRequestClose={() => setNoteEditVisible(false)}>
                     <TouchableOpacity activeOpacity={0.9} style={styles.overlay}

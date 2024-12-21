@@ -6,6 +6,7 @@ import { storage } from "../store/storage"
 import { InputText } from "./Input/InputText"
 import PrimaryButton from "./Buttons/Primary"
 import {Room} from "../types/Room"
+import {Loading} from "./Loading";
 
 export default function RoomCardCover({ room, navigation }: {room: Room, navigation: any}) {
     const covers = [
@@ -30,6 +31,8 @@ export default function RoomCardCover({ room, navigation }: {room: Room, navigat
             })
         })
     }
+
+    if (!room) return <Loading/>
 
     return (
         <View>
@@ -72,12 +75,12 @@ export default function RoomCardCover({ room, navigation }: {room: Room, navigat
                         {activeStates[3] && (
                             room.note ? <Text style={styles.textAsNote}>{room.note}</Text> : <Text style={{color: yellowPrimary}}>No notes</Text>
                         )}
-                        {!activeStates[3] && <Text style={{color: greenPrimaryDarker}}>Snip</Text>}
+                        {!activeStates[3] && <Text style={{color: greenPrimaryDarker}}>Note</Text>}
                     </TouchableOpacity>
                 </View>
 
                 <TouchableOpacity style={{margin: 4}} onPress={() => navigation.navigate("RoomDetail", { id: room.id })}>
-                    <Text style={{color: greenPrimary, borderColor: greenPrimary, borderWidth: 0.6, borderRadius: 12, paddingHorizontal: 30}}>Edit rom</Text>
+                    <Text style={{color: greenPrimary, borderColor: greenPrimary, borderWidth: 0.6, borderRadius: 12, paddingHorizontal: 30}}>Go to room</Text>
                 </TouchableOpacity>
             </View>
         </View>

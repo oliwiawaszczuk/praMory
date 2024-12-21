@@ -13,6 +13,7 @@ import PrimaryButton from "../components/Buttons/Primary";
 import {ImagePalacePin} from "../types/ImagePin";
 import {useNavigation} from "@react-navigation/native";
 import {scaleActualToDisplayed, scaleDisplayedToActual} from "../utils/ScalePoint";
+import {PIN_SIZE} from "../const/Const";
 
 export default function LinkPinToImage() {
     const navigation = useNavigation()
@@ -107,7 +108,7 @@ const styles = StyleSheet.create({
     },
     square: {
         position: 'absolute',
-        width: 10,
+        width: PIN_SIZE,
         aspectRatio: 1,
         borderRadius: "50%",
         backgroundColor: activePinColor,

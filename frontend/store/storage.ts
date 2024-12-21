@@ -62,6 +62,8 @@ export const storage = create<StorageInterface>()(
                 set((state) => ({
                     palaces: state.palaces.map((palace) => {
                         if (palace.id === id) {
+                            if (!palace.pins)
+                                return { ...palace, pins: [newPin] }
                             const existingPinIndex = palace.pins.findIndex(pin => pin.room_id === newPin.room_id)
                             if (existingPinIndex >= 0) {
                                 const updatedPins = [...palace.pins]
@@ -84,6 +86,12 @@ export const storage = create<StorageInterface>()(
             removeRoom: (id: number) => {
                 set((state) => ({
                     rooms: state.rooms.filter((room) => room.id !== id ),
+                    palaces: state.palaces.map((palace) => {
+                        if (palace.pins) {
+                            palace.pins = palace.pins.filter((pin) => pin.room_id !== id)
+                        }
+                        return palace
+                    })
                 }))
             },
             updateRoomName: (id: number, newName: string) => {
