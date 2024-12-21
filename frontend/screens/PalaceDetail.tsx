@@ -22,9 +22,11 @@ import {greenPrimary, greenPrimaryDarker, yellowPrimary, yellowPrimaryDarker} fr
 import AddNewRoom from "../components/AddNewRoom"
 import SecondaryButton from "../components/Buttons/Secondary"
 import LineToOpen from "../components/LineToOpen"
-import RoomCard from "../components/RoomCard"
+import RoomCardCover from "../components/RoomCardCover"
 import NoteInput from "../components/Text/Note"
 import {MIN_NOTE_HEIGHT, MAX_NOTE_HEIGHT, ONE_STEP_HEIGHT} from "../const/Const"
+import RoomCardsSlider from "../components/RoomCardsSlider";
+import RoomCard from "../components/RoomCard";
 
 const PALACE_IMAGE_HEIGHT = 600
 const PALACE_IMAGE_HEIGHT_MIN = 40
@@ -34,11 +36,12 @@ export default function PalaceDetail({navigation}: { navigation: any }) {
     const {id} = route.params as { id: number }
 
     const [palaceImage, setPalaceImage] = useState<string | null>(null)
-    // const [imageHeight, setImageHeight] = useState(PALACE_IMAGE_HEIGHT)
     const [palace, setPalace] = useState<Palace | null>(null)
-    const [noteVisible, setNoteVisible] = useState(false)
-    const [roomsVisible, setRoomsVisible] = useState(false)
-    const [noteEditVisible, setNoteEditVisible] = useState(false)
+    const [noteVisible, setNoteVisible] = useState<boolean>(false)
+    const [isSliderVisible, setIsSliderVisible] = useState<boolean>(false)
+
+    const [roomsVisible, setRoomsVisible] = useState<boolean>(false)
+    const [noteEditVisible, setNoteEditVisible] = useState<boolean>(false)
     const [noteEditText, setNoteEditText] = useState("")
     const [noteHeight, setNoteHeight] = useState(MIN_NOTE_HEIGHT)
 
@@ -75,13 +78,14 @@ export default function PalaceDetail({navigation}: { navigation: any }) {
         )
     }
 
-    const animatedImageHeight = useRef(new Animated.Value(PALACE_IMAGE_HEIGHT)).current;
+    // ANIMATION
+    const animatedImageHeight = useRef(new Animated.Value(PALACE_IMAGE_HEIGHT-250)).current
 
     const imageHeight = animatedImageHeight.interpolate({
         inputRange: [PALACE_IMAGE_HEIGHT_MIN, PALACE_IMAGE_HEIGHT],
         outputRange: [PALACE_IMAGE_HEIGHT_MIN, PALACE_IMAGE_HEIGHT],
         extrapolate: 'clamp',
-    });
+    })
 
     const panResponder = useRef(
         PanResponder.create({
@@ -95,10 +99,10 @@ export default function PalaceDetail({navigation}: { navigation: any }) {
                 {useNativeDriver: false}
             ),
             onPanResponderRelease: (evt, {moveY}) => {
-                animatedImageHeight.extractOffset();
+                animatedImageHeight.extractOffset()
             },
         })
-    ).current;
+    ).current
 
     const filteredRooms = rooms.filter(room => room.palace_id === id)
 
@@ -126,22 +130,6 @@ export default function PalaceDetail({navigation}: { navigation: any }) {
             )}
             <ScrollView style={styles.scrollView} keyboardShouldPersistTaps="handled">
                 <LineToOpen label="Rooms" visible={roomsVisible} setVisible={setRoomsVisible}/>
-                {roomsVisible && (
-                    <View style={styles.dropdown}>
-                        <View style={{flexDirection: 'row', justifyContent: 'space-between', width: '100%'}}>
-                            <SmallButton onPress={() => {}}/>
-                            <View style={{flex: 6}}>
-                                <AddNewRoom palace_id={id}/>
-                            </View>
-                            <SmallButton onPress={() => {}}/>
-                        </View>
-                        <View style={styles.roomCardContainer}>
-                            {filteredRooms.map(room => (
-                                <RoomCard key={room.id} room={room} navigation={navigation}/>
-                            ))}
-                        </View>
-                    </View>
-                )}
                 <Modal visible={noteEditVisible} transparent onRequestClose={() => setNoteEditVisible(false)}>
                     <TouchableOpacity activeOpacity={0.9} style={styles.overlay}
                                       onPress={() => setNoteEditVisible(false)}>
@@ -165,6 +153,27 @@ export default function PalaceDetail({navigation}: { navigation: any }) {
                         </View>
                     </TouchableOpacity>
                 </Modal>
+                {roomsVisible && (
+                    <View style={styles.dropdown}>
+                        {filteredRooms.length > 0 && (isSliderVisible ?
+                            <View style={styles.roomCardContainer}>
+                                {filteredRooms.map(room => (
+                                    <View key={room.id} style={styles.roomCard}><RoomCard room={room} navigation={navigation}/></View>
+                                ))}
+                            </View> :
+                            <RoomCardsSlider rooms={filteredRooms} navigation={navigation}/>
+                        )}
+
+                        <View style={{flexDirection: 'row', justifyContent: 'space-between', width: '100%'}}>
+                            <SmallButton onPress={() => {}}/>
+                            <View style={{flex: 6}}>
+                                <AddNewRoom palace_id={id}/>
+                            </View>
+                            <SmallButton onPress={() => setIsSliderVisible(!isSliderVisible)}/>
+                        </View>
+                    </View>
+                )}
+
                 <LineToOpen label="Notes" visible={noteVisible} setVisible={setNoteVisible}/>
                 {noteVisible && (
                     <View>
@@ -221,8 +230,8 @@ const styles = StyleSheet.create({
         borderWidth: 2,
         borderRadius: 14,
         aspectRatio: 1,
-        // justifyContent: "center",
-        // alignItems: "center",
+        justifyContent: "center",
+        alignItems: "center",
     },
     absImage: {
         width: "100%",
@@ -240,15 +249,19 @@ const styles = StyleSheet.create({
         position: "relative",
     },
     dropdown: {
-        padding: 10,
+        paddingHorizontal: 10,
         elevation: 2,
     },
     roomCardContainer: {
         flexDirection: 'row',
-        flex: 1,
+        // flex: 1,
         flexWrap: "wrap",
         justifyContent: 'space-between',
-        alignItems: 'flex-start',
+        // alignItems: 'flex-start',
+    },
+    roomCard: {
+        width: 110,
+        // height: 100,
     },
     overlay: {
         flex: 1,
@@ -258,6 +271,7 @@ const styles = StyleSheet.create({
     },
     modalContent: {
         width: "90%",
+        height: "80%",
         borderRadius: 10,
         padding: 20,
         shadowOffset: {width: 0, height: 2},

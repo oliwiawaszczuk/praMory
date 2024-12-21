@@ -12,7 +12,7 @@ import {greenPrimary, greenPrimaryDarker, yellowPrimary, yellowPrimaryDarker} fr
 import AddNewRoom from "../components/AddNewRoom";
 import SecondaryButton from "../components/Buttons/Secondary";
 import LineToOpen from "../components/LineToOpen";
-import RoomCard from "../components/RoomCard";
+import RoomCardCover from "../components/RoomCardCover";
 import NoteInput from "../components/Text/Note";
 import {Room} from "../types/Room";
 

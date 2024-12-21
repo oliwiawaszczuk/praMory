@@ -29,6 +29,7 @@ const styles = StyleSheet.create({
     },
     input: {
         width: "100%",
+        flex: 1,
         backgroundColor: grayPrimaryBrighter,
         borderRadius: 10,
         padding: 15,
@@ -37,6 +38,6 @@ const styles = StyleSheet.create({
         color: yellowPrimary,
         borderColor: greenPrimary,
         borderWidth: 1,
-        minHeight: 150,
+        // minHeight: 150,
     },
 });

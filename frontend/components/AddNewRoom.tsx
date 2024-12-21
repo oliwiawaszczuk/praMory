@@ -19,6 +19,10 @@ export default function AddNewRoom({palace_id}: {palace_id: number}) {
                     id: rooms.length > 0 ? Math.max(...rooms.map(p => p.id)) + 1 : 1,
                     palace_id: palace_id,
                     name: newTitle,
+                    snip: null,
+                    path_to_image: null,
+                    note: null,
+                    things: null
                 }
             )
             setNewTitle('')
