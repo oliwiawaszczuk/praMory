@@ -11,3 +11,5 @@ export const greenPrimaryDarker = "#21704b"
 
 
 export const black = "#2c3434"
+export const pinsColor = "#651bab"
+export const activePinColor = "#300c50"

@@ -1,14 +1,4 @@
-import {
-    View,
-    Image,
-    ScrollView,
-    StyleSheet,
-    Animated,
-    Dimensions,
-    TouchableOpacity,
-    PanResponder,
-    Modal
-} from "react-native"
+import { View, Image, ScrollView, StyleSheet, Animated, Dimensions, TouchableOpacity, PanResponder, Modal, ImageBackground} from "react-native"
 import React, {useEffect, useRef, useState} from "react"
 import {useRoute} from "@react-navigation/native"
 import {Text} from "../components/Text/Default"
@@ -18,7 +8,14 @@ import {storage} from "../store/storage"
 import PrimaryButton from "../components/Buttons/Primary"
 import {launchImageLibrary} from 'react-native-image-picker'
 import HorizontalLine from "../components/HorizontalLine"
-import {greenPrimary, greenPrimaryDarker, yellowPrimary, yellowPrimaryDarker} from "../const/Colors"
+import {
+    activePinColor,
+    greenPrimary,
+    greenPrimaryDarker,
+    pinsColor,
+    yellowPrimary,
+    yellowPrimaryDarker
+} from "../const/Colors"
 import AddNewRoom from "../components/AddNewRoom"
 import SecondaryButton from "../components/Buttons/Secondary"
 import LineToOpen from "../components/LineToOpen"
@@ -27,9 +24,13 @@ import NoteInput from "../components/Text/Note"
 import {MIN_NOTE_HEIGHT, MAX_NOTE_HEIGHT, ONE_STEP_HEIGHT} from "../const/Const"
 import RoomCardsSlider from "../components/RoomCardsSlider";
 import RoomCard from "../components/RoomCard";
+import Slider from '@react-native-community/slider'
+import {valueSetter} from "react-native-reanimated/lib/typescript/valueSetter";
+import {Point} from "../types/Point";
+import {ImagePalacePin} from "../types/ImagePin";
 
 const PALACE_IMAGE_HEIGHT = 600
-const PALACE_IMAGE_HEIGHT_MIN = 40
+const PALACE_IMAGE_HEIGHT_MIN = 54
 
 export default function PalaceDetail({navigation}: { navigation: any }) {
     const route = useRoute()
@@ -39,6 +40,11 @@ export default function PalaceDetail({navigation}: { navigation: any }) {
     const [palace, setPalace] = useState<Palace | null>(null)
     const [noteVisible, setNoteVisible] = useState<boolean>(false)
     const [isSliderVisible, setIsSliderVisible] = useState<boolean>(false)
+
+    const [isImageStatic, setIsImageStatic] = useState<boolean>(false)
+    const [imageSize, setImageSize] = useState<{width: number, height: number}>({ width: 0, height: 0 })
+    const [imageScale, setImageScale] = useState<number>(1)
+    const [activePin, setActivePin] = useState<ImagePalacePin | null>(null)
 
     const [roomsVisible, setRoomsVisible] = useState<boolean>(false)
     const [noteEditVisible, setNoteEditVisible] = useState<boolean>(false)
@@ -81,7 +87,7 @@ export default function PalaceDetail({navigation}: { navigation: any }) {
     // ANIMATION
     const animatedImageHeight = useRef(new Animated.Value(PALACE_IMAGE_HEIGHT-250)).current
 
-    const imageHeight = animatedImageHeight.interpolate({
+    const imageAnimationHeight = animatedImageHeight.interpolate({
         inputRange: [PALACE_IMAGE_HEIGHT_MIN, PALACE_IMAGE_HEIGHT],
         outputRange: [PALACE_IMAGE_HEIGHT_MIN, PALACE_IMAGE_HEIGHT],
         extrapolate: 'clamp',
@@ -104,6 +110,24 @@ export default function PalaceDetail({navigation}: { navigation: any }) {
         })
     ).current
 
+    const { width: screenWidth } = Dimensions.get('window')
+    const { width: imageWidth, height: imageHeight } = imageSize
+
+    const imageAspectRatio = imageWidth > 0 ? imageHeight / imageWidth : 1
+    const calculatedHeight = screenWidth * imageAspectRatio
+
+    const handleSliderChange = (value: number) => {
+        setImageScale(value)
+    }
+
+    const handleImageLoad = (event: any) => {
+        const {width, height} = event.nativeEvent.source
+        setImageSize({width, height})
+    }
+
+    const scaleX = (x: number) => (x / imageSize.width) * (Dimensions.get('window').width * imageScale)
+    const scaleY = (y: number) => (y / imageSize.height) * (calculatedHeight * imageScale)
+
     const filteredRooms = rooms.filter(room => room.palace_id === id)
 
     if (!palace) return <Loading/>
@@ -111,22 +135,65 @@ export default function PalaceDetail({navigation}: { navigation: any }) {
     return (
         <View style={{flex: 1}}>
             {palaceImage && (
-                <>
+                <View style={{position: "relative"}}>
+                    <TouchableOpacity
+                        activeOpacity={0.7}
+                        onPress={() => setIsImageStatic(!isImageStatic)}
+                        style={{width: 30, height: 30, position: "absolute", top: 5, right: 5, borderRadius: 10, backgroundColor: greenPrimaryDarker, zIndex: 2}}
+                    />
                     <TouchableOpacity
                         activeOpacity={0.9}
                         onLongPress={() => navigation.navigate('ImageLook', {pathToImage: palaceImage})}
+                        style={{alignItems: "center"}}
                     >
-                        <Animated.Image
+                        {!isImageStatic ? <Animated.Image
                             source={{uri: palaceImage}}
-                            style={[styles.absImage, {height: imageHeight}]}
+                            style={[styles.absImage, {height: imageAnimationHeight}]}
                             resizeMode="cover"
-                        />
+                        /> : <ImageBackground
+                            source={{ uri: palaceImage }}
+                            resizeMode="contain"
+                            style={{ width: screenWidth/imageScale, height: calculatedHeight/imageScale }}
+                            onLoad={handleImageLoad}
+                        >
+                            <View style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}>
+                                {palace.pins.map((pin, index) => (
+                                    <TouchableOpacity
+                                        key={index}
+                                        onPress={() => setActivePin(pin)}
+                                        style={{
+                                            position: 'absolute',
+                                            left: scaleX(pin.position.x),
+                                            top: scaleY(pin.position.y),
+                                            width: 12 / imageScale,
+                                            height: 12 / imageScale,
+                                            borderRadius: 10,
+                                            backgroundColor: pinsColor, //pin === activePin ? activePinColor :
+                                        }}
+                                    />
+                                ))}
+                            </View>
+                        </ImageBackground>}
                     </TouchableOpacity>
-                    <View {...panResponder.panHandlers} style={styles.dragLine}>
-                        {/*<HorizontalLine color={yellowPrimaryDarker} lineHeight={10}/>*/}
-                        <View style={styles.handler}></View>
-                    </View>
-                </>
+                    {!isImageStatic ?
+                        <View {...panResponder.panHandlers} style={styles.dragLine}>
+                            <View style={styles.handler}></View>
+                        </View> :
+                        <View style={styles.sliderContainer}>
+                            <HorizontalLine color={yellowPrimaryDarker} lineHeight={10}/>
+                            <Slider
+                                style={styles.slider}
+                                minimumValue={1}
+                                maximumValue={5}
+                                onValueChange={handleSliderChange}
+                                minimumTrackTintColor="rgba(0, 0, 0, 0)"
+                                maximumTrackTintColor="rgba(0, 0, 0, 0)"
+                                thumbTintColor={greenPrimaryDarker}
+                                step={0.1}
+                            />
+                        </View>
+                    }
+                </View>
             )}
             <ScrollView style={styles.scrollView} keyboardShouldPersistTaps="handled">
                 <LineToOpen label="Rooms" visible={roomsVisible} setVisible={setRoomsVisible}/>
@@ -317,5 +384,14 @@ const styles = StyleSheet.create({
         borderColor: greenPrimaryDarker,
         borderRightWidth: 0,
     },
-
+    sliderContainer: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        position: "relative",
+    },
+    slider: {
+        position: "absolute",
+        width: '80%',
+        height: 20,
+    },
 });

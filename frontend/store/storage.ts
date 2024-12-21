@@ -3,6 +3,7 @@ import {createJSONStorage, persist} from 'zustand/middleware';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Palace} from '../types/Palace';
 import {Room} from "../types/Room";
+import {ImagePalacePin} from "../types/ImagePin";
 
 interface StorageInterface {
     palaces: Palace[]
@@ -15,6 +16,7 @@ interface StorageInterface {
     updatePalaceTitle: (id: number, newTitle: string) => void
     updatePalaceImage: (id: number, newImagePath: string) => void
     updatePalaceNote: (id: number, newNote: string) => void
+    addPinRoomToPalace: (id: number, imagePalacePin: ImagePalacePin) => void
 }
 
 export const storage = create<StorageInterface>()(
@@ -54,6 +56,22 @@ export const storage = create<StorageInterface>()(
                     palaces: state.palaces.map((palace) =>
                         palace.id === id ? { ...palace, note: newNote } : palace
                     ),
+                }))
+            },
+            addPinRoomToPalace: (id: number, newPin: ImagePalacePin) => {
+                set((state) => ({
+                    palaces: state.palaces.map((palace) => {
+                        if (palace.id === id) {
+                            const existingPinIndex = palace.pins.findIndex(pin => pin.room_id === newPin.room_id)
+                            if (existingPinIndex >= 0) {
+                                const updatedPins = [...palace.pins]
+                                updatedPins[existingPinIndex] = newPin
+                                return { ...palace, pins: updatedPins }
+                            } else
+                                return { ...palace, pins: [...palace.pins, newPin] }
+                        }
+                        return palace
+                    }),
                 }))
             },
 

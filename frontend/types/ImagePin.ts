@@ -6,7 +6,7 @@ export type ImagePin = {
 }
 
 export type ImagePalacePin = {
-
+    room_id: number
 } & ImagePin
 
 

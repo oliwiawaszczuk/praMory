@@ -78,6 +78,10 @@ export default function RoomDetail({navigation}: { navigation: any }) {
     //
     // const filteredRooms = rooms.filter((room) => room.palace_id === id)
 
+    const handleLinkRoomToImage = () => {
+        navigation.navigate("LinkPinToImage", {room_id: id})
+    }
+
     return (
         <View style={{flex: 1}}>
             {roomsImages && (
@@ -111,6 +115,7 @@ export default function RoomDetail({navigation}: { navigation: any }) {
                 )}
 
                 {/*<SecondaryButton text="Pick palace bacground image from gallery" onPressFunc={handlePickImage}/>*/}
+                <PrimaryButton text="Link room to image" onPressFunc={handleLinkRoomToImage}/>
             </ScrollView>
         </View>
     )
