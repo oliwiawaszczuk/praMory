@@ -75,11 +75,11 @@ export default function RoomCard({room, navigation}: { room: Room, navigation: a
                 onLongPress={() => setVisibleEditPalaceCardModal(true)}
             >
                 <View style={styles.imageContainer}>
-                    {/*{room.path_to_image && <Image*/}
-                    {/*    source={{uri: room.path_to_image}}*/}
-                    {/*    style={styles.image}*/}
-                    {/*    resizeMode="cover"*/}
-                    {/*/>}*/}
+                    {room.path_to_image && <Image
+                        source={{uri: room.path_to_image}}
+                        style={styles.image}
+                        resizeMode="cover"
+                    />}
                 </View>
 
                 <View>
@@ -117,6 +117,7 @@ const styles= StyleSheet.create({
     image: {
         width: '100%',
         height: '100%',
+        borderRadius: 10,
     },
     textContainer: {
 

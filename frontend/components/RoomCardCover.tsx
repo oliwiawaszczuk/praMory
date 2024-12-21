@@ -61,7 +61,7 @@ export default function RoomCardCover({ room, navigation }: {room: Room, navigat
                         {activeStates[2] && (
                             room.path_to_image ?
                             <View style={styles.imageContainer}>
-                                {/* Image placeholder */}
+                                <Image source={{uri: room.path_to_image}} style={{width:'100%', height:'100%'}} />
                             </View> : <Text style={{color: yellowPrimary}}>No image</Text>
                         )}
                         {!activeStates[2] && <Text style={{color: greenPrimaryDarker}}>Background Image</Text>}
@@ -102,7 +102,7 @@ const styles = StyleSheet.create({
         flex: 1,
         aspectRatio: 1,
         borderRadius: 10,
-        backgroundColor: greenPrimary,
+        // backgroundColor: greenPrimary,
         margin: 10,
     },
     title: {

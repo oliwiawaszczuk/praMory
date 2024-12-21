@@ -7,7 +7,7 @@ export interface ButtonInterface {
     text: string,
     onPressFunc: any,
     style?: StyleProp<ViewStyle>;
-    styleText?: StyleProp<ViewStyle>;
+    styleText?: any;
 }
 
 export interface ButtonIconInterface extends ButtonInterface {

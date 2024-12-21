@@ -27,6 +27,8 @@ import RoomCard from "../components/RoomCard";
 import Slider from '@react-native-community/slider'
 import {ImagePalacePin} from "../types/ImagePin";
 import {scaleActualToDisplayed} from "../utils/ScalePoint";
+import {pickImage} from "../utils/PickImage";
+import NoteInputModal from "../components/Modals/NoteInputModal";
 
 const PALACE_IMAGE_HEIGHT = 600
 const PALACE_IMAGE_HEIGHT_MIN = 54
@@ -72,17 +74,16 @@ export default function PalaceDetail({navigation}: { navigation: any }) {
         }
     }, [palace, navigation])
 
-    const handlePickImage = () => {
-        launchImageLibrary(
-            {mediaType: 'photo', quality: 1},
-            response => {
-                if (response.assets && response.assets.length > 0) {
-                    const pickedPhoto = response.assets[0]
-                    setPalaceImage(pickedPhoto.uri || null)
-                    updatePalaceImage(palace?.id || 0, pickedPhoto.uri || "")
-                }
-            }
-        )
+    const handlePickImage = async () => {
+        try {
+            const imageUri = await pickImage()
+            // @ts-ignore
+            setPalaceImage(imageUri)
+            // @ts-ignore
+            updatePalaceImage(palace?.id || 0, imageUri)
+        } catch (error) {
+            console.log("Error pick image", error)
+        }
     }
 
     // ANIMATION
@@ -146,6 +147,11 @@ export default function PalaceDetail({navigation}: { navigation: any }) {
     }, [isImageStatic])
 
     const filteredRooms = rooms.filter(room => room.palace_id === id)
+
+    const SaveNote = () => {
+        updatePalaceNote(palace?.id || 0, noteEditText)
+        setNoteEditVisible(false)
+    }
 
     if (!palace) return <Loading/>
 
@@ -231,29 +237,6 @@ export default function PalaceDetail({navigation}: { navigation: any }) {
                 )}
 
                 <LineToOpen label="Rooms" visible={roomsVisible} setVisible={setRoomsVisible}/>
-                <Modal visible={noteEditVisible} transparent onRequestClose={() => setNoteEditVisible(false)}>
-                    <TouchableOpacity activeOpacity={0.9} style={styles.overlay}
-                                      onPress={() => setNoteEditVisible(false)}>
-                        <View style={styles.modalContent}>
-                            <NoteInput startValue={noteEditText} onChange={setNoteEditText}/>
-                            <View style={styles.buttonContainer}>
-                                <PrimaryButton
-                                    style={styles.button}
-                                    text="Save"
-                                    onPressFunc={() => {
-                                        updatePalaceNote(palace?.id || 0, noteEditText)
-                                        setNoteEditVisible(false)
-                                    }}
-                                />
-                                <PrimaryButton
-                                    style={styles.button}
-                                    text="Cancel"
-                                    onPressFunc={() => setNoteEditVisible(false)}
-                                />
-                            </View>
-                        </View>
-                    </TouchableOpacity>
-                </Modal>
                 {roomsVisible && (
                     <View style={styles.dropdown}>
                         {filteredRooms.length > 0 && (isSliderVisible ?
@@ -302,6 +285,7 @@ export default function PalaceDetail({navigation}: { navigation: any }) {
                 )}
                 <SecondaryButton text="Pick palace background image from gallery" onPressFunc={handlePickImage}/>
             </ScrollView>
+            <NoteInputModal modalVisible={noteEditVisible} setModalVisible={setNoteEditVisible} noteEditText={noteEditText} setNoteEditText={setNoteEditText} saveFunc={SaveNote}/>
         </View>
     )
 }
@@ -363,31 +347,6 @@ const styles = StyleSheet.create({
     roomCard: {
         width: 110,
         // height: 100,
-    },
-    overlay: {
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-        backgroundColor: "rgba(0, 0, 0, 0.5)",
-    },
-    modalContent: {
-        width: "90%",
-        height: "80%",
-        borderRadius: 10,
-        padding: 20,
-        shadowOffset: {width: 0, height: 2},
-        shadowOpacity: 0.3,
-        shadowRadius: 4,
-        flexDirection: "column",
-    },
-    buttonContainer: {
-        flexDirection: "row",
-        justifyContent: "space-between",
-        marginTop: 20,
-    },
-    button: {
-        flex: 1,
-        marginHorizontal: 10,
     },
     textAsNote: {
         margin: 5,

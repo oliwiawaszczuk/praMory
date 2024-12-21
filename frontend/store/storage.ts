@@ -8,15 +8,20 @@ import {ImagePalacePin} from "../types/ImagePin";
 interface StorageInterface {
     palaces: Palace[]
     rooms: Room[]
+
     addPalace: (palace: Palace) => void
     removePalace: (id: number) => void
-    addRoom: (room: Room) => void
-    removeRoom: (id: number) => void
-    updateRoomName: (id: number, newName: string) => void
     updatePalaceTitle: (id: number, newTitle: string) => void
     updatePalaceImage: (id: number, newImagePath: string) => void
     updatePalaceNote: (id: number, newNote: string) => void
     addPinRoomToPalace: (id: number, imagePalacePin: ImagePalacePin) => void
+
+    addRoom: (room: Room) => void
+    removeRoom: (id: number) => void
+    updateRoomName: (id: number, newName: string) => void
+    updateRoomImage: (id: number, newImagePath: string) => void
+    updateRoomNote: (id: number, newNote: string) => void
+    updateRoomSnip: (id: number, newSnip: string) => void
 }
 
 export const storage = create<StorageInterface>()(
@@ -98,6 +103,27 @@ export const storage = create<StorageInterface>()(
                 set((state) => ({
                     rooms: state.rooms.map((room) =>
                         room.id === id ? { ...room, name: newName } : room
+                    ),
+                }))
+            },
+            updateRoomImage: (id: number, newImagePath: string) => {
+                set((state) => ({
+                    rooms: state.rooms.map((room) =>
+                        room.id === id ? { ...room, path_to_image: newImagePath } : room
+                    ),
+                }))
+            },
+            updateRoomNote: (id: number, newNote: string) => {
+                set((state) => ({
+                    rooms: state.rooms.map((room) =>
+                        room.id === id ? { ...room, note: newNote } : room
+                    ),
+                }))
+            },
+            updateRoomSnip: (id: number, newSnip: string) => {
+                set((state) => ({
+                    rooms: state.rooms.map((room) =>
+                        room.id === id ? { ...room, snip: newSnip } : room
                     ),
                 }))
             },
