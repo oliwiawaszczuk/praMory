@@ -1,7 +1,7 @@
-import {TouchableOpacity, View, Image, StyleSheet, Modal} from "react-native";
+import {TouchableOpacity, View, Image, Text, StyleSheet, Modal} from "react-native";
 import React, {useState} from "react";
 import {Palace} from "../types/Palace";
-import {Text} from "./Text/Default";
+// import {Text} from "./Text/Default";
 import {grayPrimary, greenPrimary, greenPrimaryDarker, yellowPrimary} from "../const/Colors";
 import {storage} from "../store/storage";
 import {Pressable} from "react-native-gesture-handler";
@@ -83,7 +83,7 @@ export default function RoomCard({room, navigation}: { room: Room, navigation: a
                 </View>
 
                 <View>
-                    <Text style={styles.title}>{room.name}</Text>
+                    <Text numberOfLines={1} ellipsizeMode="tail" style={styles.title}>{room.name}</Text>
                 </View>
 
                 {/*<View style={styles.iconContainer}>*/}

@@ -1,4 +1,4 @@
-import { TouchableOpacity, View, Image, StyleSheet, Modal, Animated } from "react-native"
+import {TouchableOpacity, View, Image, StyleSheet, Modal, Animated, ScrollView} from "react-native"
 import React, { useRef, useState } from "react"
 import { Text } from "./Text/Default"
 import { grayPrimary, greenPrimary, greenPrimaryDarker, yellowPrimary, yellowPrimaryDarker } from "../const/Colors"
@@ -37,17 +37,17 @@ export default function RoomCardCover({ room, navigation }: {room: Room, navigat
     return (
         <View>
             <View style={styles.container}>
-                <View style={styles.wrapper}>
+                <View style={[styles.wrapper, {minHeight: activeStates[0] ? 0 : 25}]}>
                     <Animated.View style={[styles.cover, {width: covers[0].interpolate({inputRange: [0, 1], outputRange: ["10%", "100%"],}),},]} />
-                    <TouchableOpacity onPress={() => handlePress(0)} activeOpacity={0.8} style={styles.interactiveBar}>
+                    <TouchableOpacity onPress={() => handlePress(0)} activeOpacity={0.8} style={activeStates[0] ? styles.interactiveBar : styles.interactiveBarClose}>
                         {activeStates[0] && <Text style={styles.barText}>{room.name}</Text>}
                         {!activeStates[0] && <Text style={{color: greenPrimaryDarker}}>Name</Text>}
                     </TouchableOpacity>
                 </View>
 
-                <View style={styles.wrapper}>
+                <View style={[styles.wrapper, {minHeight: activeStates[1] ? 0 : 25}]}>
                     <Animated.View style={[styles.cover, {width: covers[1].interpolate({inputRange: [0, 1], outputRange: ["10%", "100%"],}),},]} />
-                    <TouchableOpacity onPress={() => handlePress(1)} activeOpacity={0.8} style={styles.interactiveBar}>
+                    <TouchableOpacity onPress={() => handlePress(1)} activeOpacity={0.8} style={activeStates[1] ? styles.interactiveBar : styles.interactiveBarClose}>
                         {activeStates[1] && (
                             room.snip ? <Text style={styles.barText}>{room.snip}</Text> : <Text style={{color: yellowPrimary}}>No snip</Text>
                         )}
@@ -69,13 +69,17 @@ export default function RoomCardCover({ room, navigation }: {room: Room, navigat
                     <Animated.View style={[styles.cover, {width: covers[2].interpolate({inputRange: [0, 1], outputRange: ["10%", "100%"],}),},]} />
                 </View>
 
-                <View style={styles.wrapper}>
+                <View style={[styles.wrapper, {minHeight: activeStates[3] ? 0 : 25}]}>
                     <Animated.View style={[styles.cover, {width: covers[3].interpolate({inputRange: [0, 1], outputRange: ["10%", "100%"],}),},]} />
-                    <TouchableOpacity onPress={() => handlePress(3)} activeOpacity={0.8} style={styles.interactiveBar}>
+                    <TouchableOpacity onPress={() => handlePress(3)} activeOpacity={0.8} style={activeStates[3] ? styles.interactiveBar : styles.interactiveBarClose}>
                         {activeStates[3] && (
-                            room.note ? <Text style={styles.textAsNote}>{room.note}</Text> : <Text style={{color: yellowPrimary}}>No notes</Text>
+                            room.note ?
+                                <ScrollView style={styles.textAsNote} nestedScrollEnabled={true}>
+                                    <Text style={[styles.barText, {textAlign: "left"}]}>{room.note}</Text>
+                                </ScrollView> :
+                                <Text style={{color: yellowPrimary}}>No notes</Text>
                         )}
-                        {!activeStates[3] && <Text style={{color: greenPrimaryDarker}}>Note</Text>}
+                        {!activeStates[3] && <Text style={{color: greenPrimaryDarker, flex: 1}}>Note</Text>}
                     </TouchableOpacity>
                 </View>
 
@@ -129,7 +133,7 @@ const styles = StyleSheet.create({
     },
     wrapper: {
         width: "80%",
-        height: 25,
+        // minHeight: 25,
         marginBottom: 8,
         borderWidth: 0.5,
         borderColor: yellowPrimaryDarker,
@@ -146,23 +150,28 @@ const styles = StyleSheet.create({
         borderRadius: 12,
     },
     interactiveBar: {
+        flex: 1,
+        maxHeight: 200,
+        zIndex: 2,
+        alignItems: "center",
+        justifyContent: "center",
+    },
+    interactiveBarClose: {
         position: "absolute",
         bottom: 0,
         width: "100%",
         height: "100%",
         justifyContent: "center",
         alignItems: "center",
-        zIndex: 2,
     },
     barText: {
         color: yellowPrimary,
         fontWeight: "bold",
+        flexWrap: "wrap",
+        textAlign: "center",
+        paddingHorizontal: 30,
     },
     textAsNote: {
-        margin: 5,
-        padding: 10,
-        borderColor: greenPrimary,
-        borderWidth: 1,
-        borderRadius: 10,
+        // margin: 5,
     },
 })

@@ -1,5 +1,5 @@
 import {Modal, StyleSheet, TouchableOpacity, View} from "react-native";
-import NoteInput from "../Text/Note";
+import NoteInput from "../Input/Note";
 import PrimaryButton from "../Buttons/Primary";
 import React from "react";
 import {InputText} from "../Input/InputText";

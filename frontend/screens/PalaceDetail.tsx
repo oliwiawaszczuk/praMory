@@ -20,7 +20,7 @@ import AddNewRoom from "../components/AddNewRoom"
 import SecondaryButton from "../components/Buttons/Secondary"
 import LineToOpen from "../components/LineToOpen"
 import RoomCardCover from "../components/RoomCardCover"
-import NoteInput from "../components/Text/Note"
+import NoteInput from "../components/Input/Note"
 import {MIN_NOTE_HEIGHT, MAX_NOTE_HEIGHT, ONE_STEP_HEIGHT, PIN_SIZE} from "../const/Const"
 import RoomCardsSlider from "../components/RoomCardsSlider";
 import RoomCard from "../components/RoomCard";

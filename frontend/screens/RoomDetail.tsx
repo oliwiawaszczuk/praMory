@@ -13,7 +13,7 @@ import AddNewRoom from "../components/AddNewRoom";
 import SecondaryButton from "../components/Buttons/Secondary";
 import LineToOpen from "../components/LineToOpen";
 import RoomCardCover from "../components/RoomCardCover";
-import NoteInput from "../components/Text/Note";
+import NoteInput from "../components/Input/Note";
 import {Room} from "../types/Room";
 import {pickImage} from "../utils/PickImage";
 import NoteInputModal from "../components/Modals/NoteInputModal";
@@ -160,7 +160,9 @@ export default function RoomDetail({navigation}: { navigation: any }) {
                         <LabelView labelText="Note" buttonText="Edit note" onPressFunc={() => setNoteEditVisible(true)} onClick={() => setIsNoteOpen(!isNoteOpen)}/>
                         <NoteInputModal modalVisible={noteEditVisible} setModalVisible={setNoteEditVisible} noteEditText={noteEditText} setNoteEditText={setNoteEditText} saveFunc={SaveNote}/>
                         {isNoteOpen && room.note && (
-                            <Text style={[styles.textAsNote, {height: 120}]}>{room.note}</Text>
+                            <ScrollView style={[styles.scrollViewForNote, {height: 120}]}>
+                                <Text style={styles.textAsNote}>{room.note}</Text>
+                            </ScrollView>
                         )}
 
                         <PrimaryButton text="Link room to palace image" onPressFunc={handleLinkRoomToImage}/>
@@ -196,12 +198,14 @@ const styles = StyleSheet.create({
         marginVertical: 10,
         flex: 1,
     },
-    textAsNote: {
-        margin: 5,
-        padding: 10,
+    scrollViewForNote: {
         borderColor: greenPrimary,
         borderWidth: 1,
         borderRadius: 10,
+    },
+    textAsNote: {
+        margin: 5,
+        padding: 10,
     },
     labelView: {
         flexDirection: "row",
