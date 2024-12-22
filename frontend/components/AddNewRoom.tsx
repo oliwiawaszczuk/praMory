@@ -22,7 +22,8 @@ export default function AddNewRoom({palace_id}: {palace_id: number}) {
                     snip: null,
                     path_to_image: null,
                     note: null,
-                    things: null
+                    things: null,
+                    pins: [],
                 }
             )
             setNewTitle('')
