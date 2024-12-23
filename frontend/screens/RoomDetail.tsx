@@ -1,14 +1,10 @@
 import {View, Image, ScrollView, StyleSheet, Animated, Dimensions, TouchableOpacity} from "react-native"
 import React, {useEffect, useRef, useState} from "react"
 import {useRoute} from "@react-navigation/native"
-import {Text} from "../components/Text/Default"
 import {Loading} from "../components/Loading"
 import PrimaryButton from "../components/Buttons/Primary"
 import {greenPrimary, greenPrimaryDarker, yellowPrimary, yellowPrimaryDarker} from "../const/Colors";
-import SecondaryButton from "../components/Buttons/Secondary";
 import LineToOpen from "../components/LineToOpen";
-import NoteInputModal from "../components/Modals/NoteInputModal";
-import TextInputModal from "../components/Modals/TextInputModal";
 import {ImagePalacePin} from "../types/ImagePin";
 import BackgroundImageView from "../components/BackgroundImageView";
 import {useRoomDetails} from "../hooks/useRoomDetails";
@@ -16,7 +12,7 @@ import {ImageSection} from "../components/ImageSection";
 import AddNewThing from "../components/AddNewThing";
 import ThingCard from "../components/ThingCard";
 import SliderLowerButtonsForRooms from "../components/SliderLowerButtonsForRooms";
-import {Room} from "../types/Room";
+import EditNameSnipNote from "../components/EditNameSnipNote";
 
 export default function RoomDetail({navigation}: { navigation: any }) {
     const route = useRoute()
@@ -28,26 +24,10 @@ export default function RoomDetail({navigation}: { navigation: any }) {
     const [thingsVisible, setThingsVisible] = useState<boolean>(false)
     const [editVisible, setEditVisible] = useState<boolean>(false)
 
-    const [isNameOpen, setIsNameOpen] = useState<boolean>(true)
-    const [nameEditVisible, setNameEditVisible] = useState<boolean>(false)
-
-    const [isSnipOpen, setIsSnipOpen] = useState<boolean>(true)
-    const [snipEditVisible, setSnipEditVisible] = useState<boolean>(false)
-
-    const [isNoteOpen, setIsNoteOpen] = useState<boolean>(true)
-    const [noteEditVisible, setNoteEditVisible] = useState<boolean>(false)
-
     const {
         room,
-        storage_rooms,
         things,
         pathToImage,
-        nameEditText,
-        snipEditText,
-        noteEditText,
-        setNameEditText,
-        setSnipEditText,
-        setNoteEditText,
         saveName,
         saveSnip,
         saveNote,
@@ -58,7 +38,7 @@ export default function RoomDetail({navigation}: { navigation: any }) {
     else return <Loading/>
 
     const handleLinkRoomToImage = () => {
-        navigation.navigate("LinkPinToImage", {room_id: id})
+        navigation.navigate("LinkRoomPinToImage", {room_id: id})
     }
 
     return (
@@ -83,42 +63,13 @@ export default function RoomDetail({navigation}: { navigation: any }) {
                 <LineToOpen label="Edit" visible={editVisible} setVisible={setEditVisible}/>
                 {editVisible && (
                     <View>
-                        <LabelView labelText="Name" buttonText="Edit name" onPressFunc={() => setNameEditVisible(true)} onClick={() => setIsNameOpen(!isNameOpen)}/>
-                        <TextInputModal modalVisible={nameEditVisible} setModalVisible={setNameEditVisible} noteEditText={nameEditText} setNoteEditText={setNameEditText} saveFunc={() => { setNameEditVisible(false); saveName() }}/>
-                        {isNameOpen && room.name && <Text style={styles.textAsNote}>{room.name}</Text> }
-
-                        <LabelView labelText="Snip" buttonText="Edit snip" onPressFunc={() => setSnipEditVisible(true)} onClick={() => setIsSnipOpen(!isSnipOpen)}/>
-                        <TextInputModal modalVisible={snipEditVisible} setModalVisible={setSnipEditVisible} noteEditText={snipEditText} setNoteEditText={setSnipEditText} saveFunc={() => { setSnipEditVisible(false); saveSnip() }}/>
-                        {isSnipOpen && room.snip && <Text style={styles.textAsNote}>{room.snip}</Text> }
-
-                        <LabelView labelText="Note" buttonText="Edit note" onPressFunc={() => setNoteEditVisible(true)} onClick={() => setIsNoteOpen(!isNoteOpen)}/>
-                        <NoteInputModal modalVisible={noteEditVisible} setModalVisible={setNoteEditVisible} noteEditText={noteEditText} setNoteEditText={setNoteEditText} saveFunc={() => { setNoteEditVisible(false); saveNote() }}/>
-                        {isNoteOpen && room.note && (
-                            <ScrollView style={[styles.scrollViewForNote, {height: 100}]} nestedScrollEnabled={true}>
-                                <Text style={styles.textAsNote}>{room.note}</Text>
-                            </ScrollView>
-                        )}
+                        <EditNameSnipNote name={room.name} snip={room.snip} note={room.note} saveName={saveName} saveSnip={saveSnip} saveNote={saveNote}/>
 
                         <PrimaryButton text="Link room to palace image" onPressFunc={handleLinkRoomToImage}/>
                         <ImageSection saveImage={saveImage}/>
                     </View>
                 )}
             </ScrollView>
-        </View>
-    )
-}
-
-const LabelView = ({labelText, buttonText, onPressFunc, onClick}: {labelText: string, buttonText: string, onPressFunc: any, onClick: any}) => {
-    return (
-        <View style={styles.labelView}>
-            <View style={styles.labelClickAndText}>
-                <TouchableOpacity activeOpacity={0.7} style={styles.clickToHide} onPress={onClick}/>
-                <Text style={styles.labelText}>{labelText}</Text>
-            </View>
-            <View style={{flex: 1}}/>
-            <View style={{flex: 2}}>
-                <SecondaryButton styleText={styles.buttonText} text={buttonText} onPressFunc={onPressFunc}/>
-            </View>
         </View>
     )
 }
@@ -137,35 +88,6 @@ const styles = StyleSheet.create({
     textAsNote: {
         margin: 5,
         padding: 10,
-    },
-    labelView: {
-        flexDirection: "row",
-        marginHorizontal: 10,
-    },
-    labelText: {
-        marginLeft: 10,
-        fontSize: 26,
-        fontFamily: "Mynerve-Regular",
-        color: yellowPrimary,
-    },
-    buttonText: {
-        fontSize: 14,
-        paddingVertical: 0,
-    },
-    clickToHide: {
-        height: "100%",
-        width: 20,
-        backgroundColor: greenPrimary,
-        borderTopRightRadius: 15,
-        borderBottomRightRadius: 15,
-        borderColor: greenPrimaryDarker,
-        borderWidth: 2,
-    },
-    labelClickAndText: {
-        flex: 3,
-        flexDirection: "row",
-        alignItems: "center",
-        marginVertical: 2,
     },
     thingCardContainer: {
         flexDirection: 'row',

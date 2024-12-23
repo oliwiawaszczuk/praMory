@@ -1,12 +1,5 @@
 import {Animated, Dimensions, ImageBackground, PanResponder, StyleSheet, TouchableOpacity, View} from "react-native";
-import {
-    activePinColor,
-    greenPrimary,
-    greenPrimaryDarker,
-    pinsColor,
-    yellowPrimary,
-    yellowPrimaryDarker
-} from "../const/Colors";
+import {activePinColor, greenPrimaryDarker, pinsColor, yellowPrimary, yellowPrimaryDarker} from "../const/Colors";
 import {PALACE_IMAGE_HEIGHT, PALACE_IMAGE_HEIGHT_MIN, PIN_SIZE} from "../const/Const";
 import HorizontalLine from "./HorizontalLine";
 import Slider from "@react-native-community/slider";
@@ -21,16 +14,9 @@ interface BackgroundImageViewProps {
     setIsImageStatic: (isImageStatic: boolean) => void
     pathToImage: string
     navigation: any
-    // displayedPins: ImagePalacePin[] | ImageRoomPin[]
-    // setDisplayedPins: any
     activePin: ImagePalacePin | ImageRoomPin | null
     setActivePin: any
     forWhatPins: Palace | Room
-    // imageSize: {width: number, height: number}
-    // setImageSize: any
-    // imageScale: number
-    // setImageScale: any
-    // sliderValue: number
 }
 
 export default function BackgroundImageView({isImageStatic, setIsImageStatic, pathToImage, navigation, forWhatPins, activePin, setActivePin}: BackgroundImageViewProps) {
@@ -60,11 +46,11 @@ export default function BackgroundImageView({isImageStatic, setIsImageStatic, pa
 
     useEffect(() => {
         if (forWhatPins && forWhatPins.pins && imageSize.width > 0 && imageScale > 0) {
-            // Sprawdzic czy to piny do palacu - chyba
             const newDisplayedPins = forWhatPins.pins.map((pin) => ({
                 ...pin,
                 position: scaleActualToDisplayed(pin.position, imageSize, imageScale),
             }))
+            // @ts-ignore
             setDisplayedPins(newDisplayedPins)
         }
     }, [forWhatPins, imageSize, imageScale])

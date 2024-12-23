@@ -3,7 +3,7 @@ import {createJSONStorage, persist} from 'zustand/middleware';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Palace} from '../types/Palace';
 import {Room} from "../types/Room";
-import {ImagePalacePin} from "../types/ImagePin";
+import {ImagePalacePin, ImageRoomPin} from "../types/ImagePin";
 import {Thing} from "../types/Thing";
 
 interface StorageInterface {
@@ -17,7 +17,7 @@ interface StorageInterface {
     addRoom: (room: Room) => void
     removeRoom: (id: number) => void
     updateRoom: (room: Room) => void
-    // addPinRoomToPalace: (id: number, imagePalacePin: ImagePalacePin) => void
+    addPinThingToRoom: (id: number, imageRoomPin: ImageRoomPin) => void
 
     things: Thing[]
     addThing: (room: Thing) => void
@@ -51,24 +51,6 @@ export const storage = create<StorageInterface>()(
                     ),
                 }))
             },
-            addPinRoomToPalace: (id: number, newPin: ImagePalacePin) => {
-                set((state) => ({
-                    palaces: state.palaces.map((palace) => {
-                        if (palace.id === id) {
-                            if (!palace.pins)
-                                return { ...palace, pins: [newPin] }
-                            const existingPinIndex = palace.pins.findIndex(pin => pin.room_id === newPin.room_id)
-                            if (existingPinIndex >= 0) {
-                                const updatedPins = [...palace.pins]
-                                updatedPins[existingPinIndex] = newPin
-                                return { ...palace, pins: updatedPins }
-                            } else
-                                return { ...palace, pins: [...palace.pins, newPin] }
-                        }
-                        return palace
-                    }),
-                }))
-            },
 
         // MODIFICATION ROOMS
             addRoom: (newRoom: Room) => {
@@ -93,6 +75,25 @@ export const storage = create<StorageInterface>()(
                     ),
                 }))
             },
+            addPinRoomToPalace: (id: number, newPin: ImagePalacePin) => {
+                set((state) => ({
+                    palaces: state.palaces.map((palace) => {
+                        if (palace.id === id) {
+                            if (!palace.pins)
+                                return { ...palace, pins: [newPin] }
+                            const existingPinIndex = palace.pins.findIndex(pin => pin.room_id === newPin.room_id)
+                            if (existingPinIndex >= 0) {
+                                const updatedPins = [...palace.pins]
+                                updatedPins[existingPinIndex] = newPin
+                                return { ...palace, pins: updatedPins }
+                            } else
+                                return { ...palace, pins: [...palace.pins, newPin] }
+                        }
+                        return palace
+                    }),
+                }))
+            },
+
         // MODIFICATION THINGS
             addThing: (newThing: Thing) => {
                 set((state) => ({
@@ -114,6 +115,24 @@ export const storage = create<StorageInterface>()(
                     things: state.things.map((thing) =>
                         thing.id === newThing.id ? newThing : thing
                     ),
+                }))
+            },
+            addPinThingToRoom: (id: number, newPin: ImageRoomPin) => {
+                set((state) => ({
+                    rooms: state.rooms.map((room) => {
+                        if (room.id === id) {
+                            if (!room.pins)
+                                return { ...room, pins: [newPin] }
+                            const existingPinIndex = room.pins.findIndex(pin => pin.thing_id === newPin.thing_id)
+                            if (existingPinIndex >= 0) {
+                                const updatedPins = [...room.pins]
+                                updatedPins[existingPinIndex] = newPin
+                                return { ...room, pins: updatedPins }
+                            } else
+                                return { ...room, pins: [...room.pins, newPin] }
+                        }
+                        return room
+                    }),
                 }))
             },
         }),

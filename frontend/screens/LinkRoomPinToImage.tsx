@@ -15,7 +15,7 @@ import {useNavigation} from "@react-navigation/native";
 import {scaleActualToDisplayed, scaleDisplayedToActual} from "../utils/ScalePoint";
 import {PIN_SIZE} from "../const/Const";
 
-export default function LinkPinToImage() {
+export default function LinkRoomPinToImage() {
     const navigation = useNavigation()
     const route = useRoute()
     const {room_id} = route.params as { room_id: number }
