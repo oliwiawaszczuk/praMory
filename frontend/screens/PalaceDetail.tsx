@@ -19,10 +19,10 @@ import {
 import AddNewRoom from "../components/AddNewRoom"
 import SecondaryButton from "../components/Buttons/Secondary"
 import LineToOpen from "../components/LineToOpen"
-import RoomCardCover from "../components/RoomCardCover"
+import CardCover from "../components/CardCover"
 import NoteInput from "../components/Input/Note"
 import {MIN_NOTE_HEIGHT, MAX_NOTE_HEIGHT, ONE_STEP_HEIGHT, PIN_SIZE} from "../const/Const"
-import RoomCardsSlider from "../components/RoomCardsSlider";
+import CardsSlider from "../components/CardsSlider";
 import RoomCard from "../components/RoomCard";
 import Slider from '@react-native-community/slider'
 import {ImagePalacePin} from "../types/ImagePin";
@@ -86,9 +86,10 @@ export default function PalaceDetail({navigation}: { navigation: any }) {
                         <TouchableOpacity  activeOpacity={0.8} onPress={() => setActivePin(null)} style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
                             <TaxiDeco howManyLines={4}/>
                         </TouchableOpacity>
-                        <RoomCardCover
+                        <CardCover
                             // @ts-ignore
-                            room={rooms.find((room) => room.id === activePin.room_id)}
+                            item={rooms.find((room) => room.id === activePin.room_id)}
+                            whereToGoDetail="RoomDetail"
                             navigation={navigation}
                         />
                     </View>
@@ -103,7 +104,7 @@ export default function PalaceDetail({navigation}: { navigation: any }) {
                                     <View key={room.id} style={styles.roomCard}><RoomCard room={room} navigation={navigation}/></View>
                                 ))}
                             </View> :
-                            <RoomCardsSlider rooms={rooms} navigation={navigation}/>
+                            <CardsSlider items={rooms} whereToGoDetail="RoomDetail" navigation={navigation}/>
                         )}
 
                         <View style={{flexDirection: 'row', justifyContent: 'space-between', width: '100%'}}>

@@ -1,14 +1,14 @@
 import {TouchableOpacity, View, Image, StyleSheet, Modal, Animated, ScrollView} from "react-native"
-import React, { useRef, useState } from "react"
+import React, {useEffect, useRef, useState} from "react"
 import { Text } from "./Text/Default"
 import { grayPrimary, greenPrimary, greenPrimaryDarker, yellowPrimary, yellowPrimaryDarker } from "../const/Colors"
-import { storage } from "../store/storage"
-import { InputText } from "./Input/InputText"
-import PrimaryButton from "./Buttons/Primary"
 import {Room} from "../types/Room"
 import {Loading} from "./Loading";
+import {Thing} from "../types/Thing";
 
-export default function RoomCardCover({ room, navigation }: {room: Room, navigation: any}) {
+export default function CardCover({ item, navigation, whereToGoDetail }: {item: Room | Thing, navigation: any, whereToGoDetail: "RoomDetail" | "ThingDetail"}) {
+    const [image, setImage] = useState<string | null>(null)
+
     const covers = [
         useRef(new Animated.Value(1)).current,
         useRef(new Animated.Value(1)).current,
@@ -17,6 +17,13 @@ export default function RoomCardCover({ room, navigation }: {room: Room, navigat
     ]
 
     const [activeStates, setActiveStates] = useState([false, false, false, false])
+
+    useEffect(() => {
+        // @ts-ignore
+        if (whereToGoDetail === "ThingDetail" && item.path_to_images && item.path_to_images.length > 0) setImage(item.path_to_images[0])
+        // @ts-ignore
+        if (whereToGoDetail === "RoomDetail" && item.path_to_image) setImage(item.path_to_image)
+    }, [item])
 
     const handlePress = (index: number) => {
         Animated.timing(covers[index], {
@@ -32,7 +39,7 @@ export default function RoomCardCover({ room, navigation }: {room: Room, navigat
         })
     }
 
-    if (!room) return <Loading/>
+    if (!item) return <Loading/>
 
     return (
         <View>
@@ -40,7 +47,7 @@ export default function RoomCardCover({ room, navigation }: {room: Room, navigat
                 <View style={[styles.wrapper, {minHeight: activeStates[0] ? 0 : 25}]}>
                     <Animated.View style={[styles.cover, {width: covers[0].interpolate({inputRange: [0, 1], outputRange: ["10%", "100%"],}),},]} />
                     <TouchableOpacity onPress={() => handlePress(0)} activeOpacity={0.8} style={activeStates[0] ? styles.interactiveBar : styles.interactiveBarClose}>
-                        {activeStates[0] && <Text style={styles.barText}>{room.name}</Text>}
+                        {activeStates[0] && <Text style={styles.barText}>{item.name}</Text>}
                         {!activeStates[0] && <Text style={{color: greenPrimaryDarker}}>Name</Text>}
                     </TouchableOpacity>
                 </View>
@@ -49,7 +56,7 @@ export default function RoomCardCover({ room, navigation }: {room: Room, navigat
                     <Animated.View style={[styles.cover, {width: covers[1].interpolate({inputRange: [0, 1], outputRange: ["10%", "100%"],}),},]} />
                     <TouchableOpacity onPress={() => handlePress(1)} activeOpacity={0.8} style={activeStates[1] ? styles.interactiveBar : styles.interactiveBarClose}>
                         {activeStates[1] && (
-                            room.snip ? <Text style={styles.barText}>{room.snip}</Text> : <Text style={{color: yellowPrimary}}>No snip</Text>
+                            item.snip ? <Text style={styles.barText}>{item.snip}</Text> : <Text style={{color: yellowPrimary}}>No snip</Text>
                         )}
                         {!activeStates[1] && <Text style={{color: greenPrimaryDarker}}>Snip</Text>}
                     </TouchableOpacity>
@@ -59,9 +66,9 @@ export default function RoomCardCover({ room, navigation }: {room: Room, navigat
                 <View style={[styles.wrapper, {height: 200}]}>
                     <TouchableOpacity onPress={() => handlePress(2)} activeOpacity={0.8} style={styles.interactiveBar}>
                         {activeStates[2] && (
-                            room.path_to_image ?
+                            image ?
                             <View style={styles.imageContainer}>
-                                <Image source={{uri: room.path_to_image}} style={{width:'100%', height:'100%'}} />
+                                <Image source={{uri: image}} style={{width:'100%', height:'100%'}} />
                             </View> : <Text style={{color: yellowPrimary}}>No image</Text>
                         )}
                         {!activeStates[2] && <Text style={{color: greenPrimaryDarker}}>Background Image</Text>}
@@ -73,9 +80,9 @@ export default function RoomCardCover({ room, navigation }: {room: Room, navigat
                     <Animated.View style={[styles.cover, {width: covers[3].interpolate({inputRange: [0, 1], outputRange: ["10%", "100%"],}),},]} />
                     <TouchableOpacity onPress={() => handlePress(3)} activeOpacity={0.8} style={activeStates[3] ? styles.interactiveBar : styles.interactiveBarClose}>
                         {activeStates[3] && (
-                            room.note ?
+                            item.note ?
                                 <ScrollView style={styles.textAsNote} nestedScrollEnabled={true}>
-                                    <Text style={[styles.barText, {textAlign: "left"}]}>{room.note}</Text>
+                                    <Text style={[styles.barText, {textAlign: "left"}]}>{item.note}</Text>
                                 </ScrollView> :
                                 <Text style={{color: yellowPrimary}}>No notes</Text>
                         )}
@@ -83,8 +90,8 @@ export default function RoomCardCover({ room, navigation }: {room: Room, navigat
                     </TouchableOpacity>
                 </View>
 
-                <TouchableOpacity style={{margin: 4}} onPress={() => navigation.navigate("RoomDetail", { id: room.id })}>
-                    <Text style={{color: greenPrimary, borderColor: greenPrimary, borderWidth: 0.6, borderRadius: 12, paddingHorizontal: 30}}>Go to room</Text>
+                <TouchableOpacity style={{margin: 4}} onPress={() => navigation.navigate(whereToGoDetail, { id: item.id })}>
+                    <Text style={{color: greenPrimary, borderColor: greenPrimary, borderWidth: 0.6, borderRadius: 12, paddingHorizontal: 30}}>Go to {whereToGoDetail === "RoomDetail" ? "room" : "thing"}</Text>
                 </TouchableOpacity>
             </View>
         </View>

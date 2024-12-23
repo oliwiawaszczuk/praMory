@@ -1,16 +1,16 @@
 import React, {useEffect, useState} from "react";
 import {View, Text, TouchableOpacity, FlatList, StyleSheet, Animated} from "react-native";
 import {Room} from "../types/Room";
-import RoomCardCover from "./RoomCardCover";
+import CardCover from "./CardCover";
 import {greenPrimary, greenPrimaryDarker, yellowPrimary} from "../const/Colors";
+import {Thing} from "../types/Thing";
 
-export default function RoomCardsSlider({rooms, navigation}: { rooms: Room[], navigation: any }) {
-    // const [currentRoom, setCurrentRoom] = useState<Room>(rooms[0])
+export default function CardsSlider({items, whereToGoDetail, navigation}: { items: Room[] | Thing[], whereToGoDetail: "RoomDetail" | "ThingDetail", navigation: any }) {
     const [currentIndex, setCurrentIndex] = useState<number>(0)
     const [isNext, setIsNext] = useState<boolean>(true)
     const [isPrevious, setIsPrevious] = useState<boolean>(false)
 
-    const roomsWithIds = rooms.map(room => ({ id: room.id, room }))
+    const roomsWithIds = items.map(room => ({ id: room.id, room }))
 
     const goToNext = () => {
         if (currentIndex < roomsWithIds.length-1)
@@ -27,14 +27,14 @@ export default function RoomCardsSlider({rooms, navigation}: { rooms: Room[], na
     useEffect(() => {
         setIsNext(currentIndex < roomsWithIds.length - 1)
         setIsPrevious(currentIndex > 0)
-    }, [currentIndex, rooms])
+    }, [currentIndex, items])
 
     return (
         <View style={styles.sliderContainer}>
             <TouchableOpacity disabled={!isPrevious} activeOpacity={0.7} onPress={goToPrevious} style={[styles.arrowButton, { opacity: isPrevious ? 1 : 0.4 }]}/>
 
             <View style={styles.roomCardContainer}>
-                <RoomCardCover room={currentRoom} navigation={navigation} />
+                <CardCover whereToGoDetail={whereToGoDetail} item={currentRoom} navigation={navigation}/>
             </View>
 
             <TouchableOpacity disabled={!isNext} activeOpacity={0.7} onPress={goToNext} style={[styles.arrowButton, { opacity: isNext ? 1 : 0.4 }]}/>
