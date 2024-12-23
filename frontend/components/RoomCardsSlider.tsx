@@ -6,9 +6,9 @@ import {greenPrimary, greenPrimaryDarker, yellowPrimary} from "../const/Colors";
 
 export default function RoomCardsSlider({rooms, navigation}: { rooms: Room[], navigation: any }) {
     // const [currentRoom, setCurrentRoom] = useState<Room>(rooms[0])
-    const [currentIndex, setCurrentIndex] = useState<number>(0);
-    const [isNext, setIsNext] = useState<boolean>(true);
-    const [isPrevious, setIsPrevious] = useState<boolean>(false);
+    const [currentIndex, setCurrentIndex] = useState<number>(0)
+    const [isNext, setIsNext] = useState<boolean>(true)
+    const [isPrevious, setIsPrevious] = useState<boolean>(false)
 
     const roomsWithIds = rooms.map(room => ({ id: room.id, room }))
 

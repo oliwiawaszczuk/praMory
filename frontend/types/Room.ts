@@ -8,6 +8,5 @@ export type Room = {
     snip: string | null
     path_to_image: string | null
     note: string | null
-    things: Thing[] | null
     pins: ImageRoomPin[]
 }

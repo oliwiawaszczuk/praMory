@@ -9,17 +9,15 @@ export function useRoomDetails(room_id: number) {
     const [snipEditText, setSnipEditText] = useState("")
     const [noteEditText, setNoteEditText] = useState("")
 
-    const rooms = storage(state => state.rooms)
+    const storage_rooms = storage(state => state.rooms)
+    const storage_things = storage(state => state.things)
 
-    const updateRoomImage = storage(state => state.updateRoomImage)
-    const updateRoomNote = storage(state => state.updateRoomNote)
-    const updateRoomName = storage(state => state.updateRoomName)
-    const updateRoomSnip = storage(state => state.updateRoomSnip)
+    const updateRoom = storage(state => state.updateRoom)
 
     useEffect(() => {
-        const foundRoom = rooms.find((room) => room.id === room_id)
+        const foundRoom = storage_rooms.find((room) => room.id === room_id)
         setRoom(foundRoom || null)
-    }, [room_id, rooms])
+    }, [room_id, storage_rooms])
 
     useEffect(() => {
         if (room) {
@@ -30,21 +28,27 @@ export function useRoomDetails(room_id: number) {
         }
     }, [room])
 
-    const saveName = () => { updateRoomName(room_id, nameEditText) }
+    // if (!room) return null
 
-    const saveSnip = () => { updateRoomSnip(room_id, snipEditText) }
+    const things = storage_things.filter((thing) => thing.room_id === room_id)
 
-    const saveNote = () => { updateRoomNote(room_id, noteEditText) }
+    const saveName = () => { updateRoom({...room, name: nameEditText} as Room) }
+
+    const saveSnip = () => { updateRoom({...room, snip: snipEditText} as Room) }
+
+    const saveNote = () => { updateRoom({...room, note: noteEditText} as Room) }
 
     const saveImage = (imageUri: string) => {
         if (room) {
             setPathToImage(imageUri)
-            updateRoomImage(room.id, imageUri)
+            updateRoom({...room, path_to_image: imageUri})
         }
     }
 
     return {
         room,
+        storage_rooms,
+        things,
         pathToImage,
         nameEditText,
         snipEditText,

@@ -2,31 +2,21 @@ import {View, Image, ScrollView, StyleSheet, Animated, Dimensions, TouchableOpac
 import React, {useEffect, useRef, useState} from "react"
 import {useRoute} from "@react-navigation/native"
 import {Text} from "../components/Text/Default"
-import {Palace} from "../types/Palace"
 import {Loading} from "../components/Loading"
-import {storage} from "../store/storage"
 import PrimaryButton from "../components/Buttons/Primary"
-import {launchImageLibrary} from 'react-native-image-picker'
-import HorizontalLine from "../components/HorizontalLine";
 import {greenPrimary, greenPrimaryDarker, yellowPrimary, yellowPrimaryDarker} from "../const/Colors";
-import AddNewRoom from "../components/AddNewRoom";
 import SecondaryButton from "../components/Buttons/Secondary";
 import LineToOpen from "../components/LineToOpen";
-import RoomCardCover from "../components/RoomCardCover";
-import NoteInput from "../components/Input/Note";
-import {Room} from "../types/Room";
-import {pickImage} from "../utils/PickImage";
 import NoteInputModal from "../components/Modals/NoteInputModal";
 import TextInputModal from "../components/Modals/TextInputModal";
 import {ImagePalacePin} from "../types/ImagePin";
 import BackgroundImageView from "../components/BackgroundImageView";
 import {useRoomDetails} from "../hooks/useRoomDetails";
 import {ImageSection} from "../components/ImageSection";
-
-const PALACE_IMAGE_HEIGHT: number = 400
-const PALACE_IMAGE_HEIGHT_MIN: number = 100
-
-const {height: screenHeight} = Dimensions.get("window");
+import AddNewThing from "../components/AddNewThing";
+import ThingCard from "../components/ThingCard";
+import SliderLowerButtonsForRooms from "../components/SliderLowerButtonsForRooms";
+import {Room} from "../types/Room";
 
 export default function RoomDetail({navigation}: { navigation: any }) {
     const route = useRoute()
@@ -49,6 +39,8 @@ export default function RoomDetail({navigation}: { navigation: any }) {
 
     const {
         room,
+        storage_rooms,
+        things,
         pathToImage,
         nameEditText,
         snipEditText,
@@ -60,7 +52,7 @@ export default function RoomDetail({navigation}: { navigation: any }) {
         saveSnip,
         saveNote,
         saveImage,
-    } = useRoomDetails(id);
+    } = useRoomDetails(id)
 
     if (room) navigation.setOptions({title: `Room: ${room.name}`})
     else return <Loading/>
@@ -70,17 +62,23 @@ export default function RoomDetail({navigation}: { navigation: any }) {
     }
 
     return (
-        <View style={{flex: 1}}>
+        <View style={{flex: 1, position: "relative"}}>
+            <SliderLowerButtonsForRooms currentItem={room} navigation={navigation}/>
             {pathToImage && (
                 <BackgroundImageView isImageStatic={isImageStatic} setIsImageStatic={setIsImageStatic} pathToImage={pathToImage} navigation={navigation} activePin={activePin} setActivePin={setActivePin} forWhatPins={room}/>
             )}
             <ScrollView style={styles.scrollView} nestedScrollEnabled={true}>
                 <LineToOpen label="Things" visible={thingsVisible} setVisible={setThingsVisible}/>
-                {thingsVisible && (
-                    <View>
-                        <Text>things!</Text>
+                {thingsVisible && (<>
+                    <View style={styles.thingCardContainer}>
+                        {things.map((thing) =>
+                            <View key={thing.id}>
+                                <ThingCard thing={thing} navigation={navigation}/>
+                            </View>
+                        )}
                     </View>
-                )}
+                    <AddNewThing room_id={room.id}/>
+                </>)}
 
                 <LineToOpen label="Edit" visible={editVisible} setVisible={setEditVisible}/>
                 {editVisible && (
@@ -168,5 +166,12 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         alignItems: "center",
         marginVertical: 2,
+    },
+    thingCardContainer: {
+        flexDirection: 'row',
+        // flex: 1,
+        flexWrap: "wrap",
+        justifyContent: 'space-between',
+        // alignItems: 'flex-start',
     },
 });

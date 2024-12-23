@@ -51,8 +51,7 @@ export default function PalaceDetail({navigation}: { navigation: any }) {
     const [noteHeight, setNoteHeight] = useState(MIN_NOTE_HEIGHT)
 
     const {palace, rooms} = usePalaceDetails(id)
-    const updatePalaceImage = storage(state => state.updatePalaceImage)
-    const updatePalaceNote = storage(state => state.updatePalaceNote)
+    const updatePalace = storage(state => state.updatePalace)
 
     useEffect(() => {
         if (palace) {
@@ -64,12 +63,12 @@ export default function PalaceDetail({navigation}: { navigation: any }) {
         }
     }, [palace, navigation])
 
+    if (!palace) return <Loading/>
+
     const SaveNote = () => {
-        updatePalaceNote(palace?.id || 0, noteEditText)
+        updatePalace({...palace, note: noteEditText})
         setNoteEditVisible(false)
     }
-
-    if (!palace) return <Loading/>
 
     return (
         <View style={{flex: 1}}>

@@ -4,24 +4,25 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Palace} from '../types/Palace';
 import {Room} from "../types/Room";
 import {ImagePalacePin} from "../types/ImagePin";
+import {Thing} from "../types/Thing";
 
 interface StorageInterface {
     palaces: Palace[]
-    rooms: Room[]
-
     addPalace: (palace: Palace) => void
     removePalace: (id: number) => void
-    updatePalaceTitle: (id: number, newTitle: string) => void
-    updatePalaceImage: (id: number, newImagePath: string) => void
-    updatePalaceNote: (id: number, newNote: string) => void
+    updatePalace: (newPalace: Palace) => void
     addPinRoomToPalace: (id: number, imagePalacePin: ImagePalacePin) => void
 
+    rooms: Room[]
     addRoom: (room: Room) => void
     removeRoom: (id: number) => void
-    updateRoomName: (id: number, newName: string) => void
-    updateRoomImage: (id: number, newImagePath: string) => void
-    updateRoomNote: (id: number, newNote: string) => void
-    updateRoomSnip: (id: number, newSnip: string) => void
+    updateRoom: (room: Room) => void
+    // addPinRoomToPalace: (id: number, imagePalacePin: ImagePalacePin) => void
+
+    things: Thing[]
+    addThing: (room: Thing) => void
+    removeThing: (id: number) => void
+    updateThing: (room: Thing) => void
 }
 
 export const storage = create<StorageInterface>()(
@@ -29,6 +30,7 @@ export const storage = create<StorageInterface>()(
         (set) => ({
             palaces: [],
             rooms: [],
+            things: [],
 
         // MODIFICATION PALACE
             addPalace: (newPalace: Palace) => {
@@ -42,24 +44,10 @@ export const storage = create<StorageInterface>()(
                     rooms: state.rooms.filter((room) => room.palace_id !== id ),
                 }))
             },
-            updatePalaceTitle: (id: number, newTitle: string) => {
+            updatePalace: (newPalace: Palace) => {
                 set((state) => ({
                     palaces: state.palaces.map((palace) =>
-                        palace.id === id ? { ...palace, title: newTitle } : palace
-                    ),
-                }))
-            },
-            updatePalaceImage: (id: number, newImagePath: string) => {
-                set((state) => ({
-                    palaces: state.palaces.map((palace) =>
-                        palace.id === id ? { ...palace, path_to_image: newImagePath } : palace
-                    ),
-                }))
-            },
-            updatePalaceNote: (id: number, newNote: string) => {
-                set((state) => ({
-                    palaces: state.palaces.map((palace) =>
-                        palace.id === id ? { ...palace, note: newNote } : palace
+                        palace.id === newPalace.id ? newPalace : palace
                     ),
                 }))
             },
@@ -92,38 +80,39 @@ export const storage = create<StorageInterface>()(
                 set((state) => ({
                     rooms: state.rooms.filter((room) => room.id !== id ),
                     palaces: state.palaces.map((palace) => {
-                        if (palace.pins) {
+                        if (palace.pins)
                             palace.pins = palace.pins.filter((pin) => pin.room_id !== id)
-                        }
                         return palace
                     })
                 }))
             },
-            updateRoomName: (id: number, newName: string) => {
+            updateRoom: (newRoom: Room) => {
                 set((state) => ({
                     rooms: state.rooms.map((room) =>
-                        room.id === id ? { ...room, name: newName } : room
+                        room.id === newRoom.id ? newRoom : room
                     ),
                 }))
             },
-            updateRoomImage: (id: number, newImagePath: string) => {
+        // MODIFICATION THINGS
+            addThing: (newThing: Thing) => {
                 set((state) => ({
-                    rooms: state.rooms.map((room) =>
-                        room.id === id ? { ...room, path_to_image: newImagePath } : room
-                    ),
+                    things: [...state.things, newThing],
                 }))
             },
-            updateRoomNote: (id: number, newNote: string) => {
+            removeThing: (id: number) => {
                 set((state) => ({
-                    rooms: state.rooms.map((room) =>
-                        room.id === id ? { ...room, note: newNote } : room
-                    ),
+                    things: state.things.filter((thing) => thing.id !== id ),
+                    rooms: state.rooms.map((room) => {
+                        if (room.pins)
+                            room.pins = room.pins.filter((pin) => pin.thing_id !== id)
+                        return room
+                    })
                 }))
             },
-            updateRoomSnip: (id: number, newSnip: string) => {
+            updateThing: (newThing: Thing) => {
                 set((state) => ({
-                    rooms: state.rooms.map((room) =>
-                        room.id === id ? { ...room, snip: newSnip } : room
+                    things: state.things.map((thing) =>
+                        thing.id === newThing.id ? newThing : thing
                     ),
                 }))
             },

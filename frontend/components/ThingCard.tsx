@@ -2,48 +2,51 @@ import {TouchableOpacity, View, Image, Text, StyleSheet, Modal} from "react-nati
 import React, {useState} from "react";
 import {grayPrimary, greenPrimary, greenPrimaryDarker, yellowPrimary} from "../const/Colors";
 import {storage} from "../store/storage";
-import {Room} from "../types/Room";
 import TextEditAndDeleteModal from "./Modals/TextEditAndDeleteModal";
+import {Thing} from "../types/Thing";
+import {useThingDetails} from "../hooks/useThingDetails";
 
-export default function RoomCard({room, navigation}: { room: Room, navigation: any }) {
-    const [visibleEditRoomCardModal, setVisibleEditRoomCardModal] = useState(false)
-    const [newName, setNewName] = useState(room.name)
-    const removeRoom = storage((state) => state.removeRoom)
-    const updateRoom = storage((state) => state.updateRoom)
+export default function ThingCard({thing, navigation}: { thing: Thing, navigation: any }) {
+    const [visibleEditThingCardModal, setVisibleEditThingCardModal] = useState(false)
+    const [newName, setNewName] = useState(thing.name)
 
-    function redirectToRoomDetail(id: number) {
-        navigation.navigate('RoomDetail', { id })
+    const removeThing = storage((state) => state.removeThing)
+    const updateThing = storage((state) => state.updateThing)
+
+    function redirectToThingDetail(id: number) {
+        navigation.navigate('ThingDetail', { id })
     }
 
     function handleSaveChanges() {
-        updateRoom({...room, name: newName})
-        setVisibleEditRoomCardModal(false)
+        updateThing({...thing, name: newName})
+        setVisibleEditThingCardModal(false)
     }
 
     function handleRemovePalace() {
-        removeRoom(room.id)
-        setVisibleEditRoomCardModal(false)
+        removeThing(thing.id)
+        setVisibleEditThingCardModal(false)
     }
 
     return (
         <View>
-            <TextEditAndDeleteModal newTitle={newName} setNewTitle={setNewName} handleSave={handleSaveChanges} visibleEditModal={visibleEditRoomCardModal} setVisibleEditModal={setVisibleEditRoomCardModal} handleRemove={handleRemovePalace}/>
+            <TextEditAndDeleteModal newTitle={newName} setNewTitle={setNewName} handleSave={handleSaveChanges} visibleEditModal={visibleEditThingCardModal} setVisibleEditModal={setVisibleEditThingCardModal} handleRemove={handleRemovePalace}/>
 
             <TouchableOpacity
                 activeOpacity={0.9} style={styles.container}
-                onPress={() => redirectToRoomDetail(room.id)}
-                onLongPress={() => setVisibleEditRoomCardModal(true)}
+                onPress={() => redirectToThingDetail(thing.id)}
+                onLongPress={() => setVisibleEditThingCardModal(true)}
             >
                 <View style={styles.imageContainer}>
-                    {room.path_to_image && <Image
-                        source={{uri: room.path_to_image}}
+                    {thing.path_to_images && thing.path_to_images[0] && <Image
+                        source={{uri: thing.path_to_images[0]}}
                         style={styles.image}
                         resizeMode="cover"
                     />}
                 </View>
 
+
                 <View>
-                    <Text numberOfLines={1} ellipsizeMode="tail" style={styles.title}>{room.name}</Text>
+                    <Text numberOfLines={1} ellipsizeMode="tail" style={styles.title}>{thing.name}</Text>
                 </View>
             </TouchableOpacity>
         </View>
@@ -72,9 +75,6 @@ const styles= StyleSheet.create({
         width: '100%',
         height: '100%',
         borderRadius: 10,
-    },
-    textContainer: {
-
     },
     title: {
         color: yellowPrimary,

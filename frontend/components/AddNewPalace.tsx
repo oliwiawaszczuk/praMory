@@ -1,10 +1,8 @@
 import React, {useState} from "react"
-import {View, Modal, TextInput, StyleSheet} from "react-native"
+import {View} from "react-native"
 import {storage} from "../store/storage"
 import PrimaryButton from "./Buttons/Primary"
-import {Text} from "./Text/Default"
-import {grayPrimary, grayPrimaryDarker} from "../const/Colors";
-import {InputText} from "./Input/InputText";
+import AddNewModal from "./Modals/AddNewModal";
 
 export default function AddNewPalace() {
     const addPalace = storage((state) => state.addPalace);
@@ -24,46 +22,13 @@ export default function AddNewPalace() {
                 }
             )
             setNewTitle('')
-            setModalVisible(false)
         }
     }
 
     return (
         <View>
-            <Modal visible={modalVisible} animationType="slide" transparent={true}>
-                <View style={styles.modalContainer}>
-                    <View style={styles.modalContent}>
-                        <InputText label="Add new palace" get={newTitle} set={setNewTitle}/>
-
-                        <View style={styles.buttonRow}>
-                            <PrimaryButton text="Cancel" onPressFunc={() => setModalVisible(false)} />
-                            <PrimaryButton text="Add Palace" onPressFunc={handleAddPalace} />
-                        </View>
-                    </View>
-                </View>
-            </Modal>
-
+            <AddNewModal label="Add new palace" modalVisible={modalVisible} setModalVisible={setModalVisible} newText={newTitle} setNewText={setNewTitle} handleAddRoom={handleAddPalace}/>
             <PrimaryButton text="Add new palace" onPressFunc={() => setModalVisible(true)} />
         </View>
     )
 }
-
-const styles = StyleSheet.create({
-    modalContainer: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: 'rgba(0, 0, 0, 0.4)',
-    },
-    modalContent: {
-        backgroundColor: grayPrimary,
-        padding: 20,
-        borderRadius: 10,
-        width: '80%',
-        elevation: 5,
-    },
-    buttonRow: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-    },
-})

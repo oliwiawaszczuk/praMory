@@ -12,6 +12,7 @@ import { useFonts } from 'expo-font';
 import {Text} from "./components/Text/Default";
 import RoomDetail from "./screens/RoomDetail";
 import LinkPinToImage from "./screens/LinkPinToImage";
+import ThingDetail from "./screens/ThingDetail";
 
 const Stack = createNativeStackNavigator();
 
@@ -65,6 +66,7 @@ export default function App() {
                 <Stack.Screen name="Home" component={HomeScreen} options={{title: 'praMory' }}/>
                 <Stack.Screen name="PalaceDetail" component={PalaceDetail} options={{title: 'Palace Detail' }}/>
                 <Stack.Screen name="RoomDetail" component={RoomDetail} options={{title: 'Room Detail' }}/>
+                <Stack.Screen name="ThingDetail" component={ThingDetail} options={{title: 'Thing Detail' }}/>
                 <Stack.Screen name="LinkPinToImage" component={LinkPinToImage} options={{title: 'Link pin to image' }}/>
                 <Stack.Screen name="ImageLook" component={ImageLook} options={{title: 'Image Look' }}/>
                 <Stack.Screen name="Settings" component={SettingsScreen} options={{title: 'Settings' }}/>
