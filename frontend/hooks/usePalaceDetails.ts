@@ -9,6 +9,7 @@ export function usePalaceDetails(palace_id: number) {
 
     const storage_palaces = storage(state => state.palaces)
     const storage_rooms = storage(state => state.rooms)
+    const updatePalace = storage(state => state.updatePalace)
 
     useEffect(() => {
         const foundPalace = storage_palaces.find((palace) => palace.id === palace_id)
@@ -16,5 +17,10 @@ export function usePalaceDetails(palace_id: number) {
         setRooms(storage_rooms.filter((room) => room.palace_id === palace_id))
     }, [palace_id, storage_palaces, storage_rooms])
 
-    return { palace, rooms }
+    const saveImage = (path: string) => {
+        if (palace)
+            updatePalace({...palace, path_to_image: path})
+    }
+
+    return { palace, rooms, saveImage }
 }

@@ -50,7 +50,7 @@ export default function PalaceDetail({navigation}: { navigation: any }) {
     const [noteEditText, setNoteEditText] = useState("")
     const [noteHeight, setNoteHeight] = useState(MIN_NOTE_HEIGHT)
 
-    const {palace, rooms} = usePalaceDetails(id)
+    const {palace, rooms, saveImage} = usePalaceDetails(id)
     const updatePalace = storage(state => state.updatePalace)
 
     useEffect(() => {
@@ -68,6 +68,11 @@ export default function PalaceDetail({navigation}: { navigation: any }) {
     const SaveNote = () => {
         updatePalace({...palace, note: noteEditText})
         setNoteEditVisible(false)
+    }
+
+    const SaveImage = (path: string) => {
+        saveImage(path)
+        setPalaceImage(path)
     }
 
     return (
@@ -136,7 +141,7 @@ export default function PalaceDetail({navigation}: { navigation: any }) {
                         </View>
                     </View>
                 )}
-                <ImageSection saveImage={setPalaceImage}/>
+                <ImageSection saveImage={SaveImage}/>
             </ScrollView>
             <NoteInputModal modalVisible={noteEditVisible} setModalVisible={setNoteEditVisible} noteEditText={noteEditText} setNoteEditText={setNoteEditText} saveFunc={SaveNote}/>
         </View>
