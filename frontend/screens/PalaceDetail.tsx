@@ -33,6 +33,7 @@ import BackgroundImageView from "../components/BackgroundImageView";
 import TaxiDeco from "../components/Decorations/Taxi";
 import {usePalaceDetails} from "../hooks/usePalaceDetails";
 import {ImageSection} from "../components/ImageSection";
+import {SquareBlankButton} from "../components/Buttons/SquareBlankButton";
 
 export default function PalaceDetail({navigation}: { navigation: any }) {
     const route = useRoute()
@@ -108,11 +109,11 @@ export default function PalaceDetail({navigation}: { navigation: any }) {
                         )}
 
                         <View style={{flexDirection: 'row', justifyContent: 'space-between', width: '100%'}}>
-                            <SmallButton onPress={() => {}}/>
+                            <SquareBlankButton onPress={() => {}}/>
                             <View style={{flex: 6}}>
                                 <AddNewRoom palace_id={id}/>
                             </View>
-                            <SmallButton onPress={() => setIsSliderVisible(!isSliderVisible)}/>
+                            <SquareBlankButton onPress={() => setIsSliderVisible(!isSliderVisible)}/>
                         </View>
                     </View>
                 )}
@@ -149,28 +150,7 @@ export default function PalaceDetail({navigation}: { navigation: any }) {
     )
 }
 
-function SmallButton({onPress}: { onPress: () => void }) {
-    return (
-        <TouchableOpacity style={styles.smallButton} onPress={onPress}>
-            <View style={styles.smallButtonView}/>
-        </TouchableOpacity>
-    )
-}
-
 const styles = StyleSheet.create({
-    smallButton: {
-        flex: 1,
-        padding: 10,
-        height: "100%",
-    },
-    smallButtonView: {
-        borderColor: yellowPrimaryDarker,
-        borderWidth: 2,
-        borderRadius: 14,
-        aspectRatio: 1,
-        justifyContent: "center",
-        alignItems: "center",
-    },
     scrollView: {
         paddingHorizontal: 15,
         marginVertical: 10,

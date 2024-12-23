@@ -16,12 +16,13 @@ import EditNameSnipNote from "../components/EditNameSnipNote";
 import CardsSlider from "../components/CardsSlider";
 import TaxiDeco from "../components/Decorations/Taxi";
 import CardCover from "../components/CardCover";
+import {SquareBlankButton} from "../components/Buttons/SquareBlankButton";
 
 export default function RoomDetail({navigation}: { navigation: any }) {
     const route = useRoute()
     const {id} = route.params as { id: number }
 
-    const [isSliderVisible, setIsSliderVisible] = useState<boolean>(false)
+    const [isSliderVisible, setIsSliderVisible] = useState<boolean>(true)
 
     const [isImageStatic, setIsImageStatic] = useState<boolean>(false)
     const [activePin, setActivePin] = useState<ImageRoomPin | null>(null)
@@ -79,7 +80,17 @@ export default function RoomDetail({navigation}: { navigation: any }) {
                         </View> :
                         <CardsSlider items={things} whereToGoDetail="ThingDetail" navigation={navigation}/>
                     }
-                    <AddNewThing room_id={room.id}/>
+                    <View style={{flex: 1, flexDirection: 'row', justifyContent: 'space-between'}}>
+                        <View style={{flex: 1}}>
+                            <SquareBlankButton onPress={() => setIsSliderVisible(!isSliderVisible)}/>
+                        </View>
+                        <View style={{flex: 4}}>
+                            <AddNewThing room_id={room.id}/>
+                        </View>
+                        <View style={{flex: 1}}>
+                            <SquareBlankButton onPress={() => setIsSliderVisible(!isSliderVisible)}/>
+                        </View>
+                    </View>
                 </>)}
 
                 <LineToOpen label="Edit" visible={editVisible} setVisible={setEditVisible}/>
@@ -113,9 +124,7 @@ const styles = StyleSheet.create({
     },
     thingCardContainer: {
         flexDirection: 'row',
-        // flex: 1,
         flexWrap: "wrap",
         justifyContent: 'space-between',
-        // alignItems: 'flex-start',
     },
-});
+})
