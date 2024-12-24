@@ -17,8 +17,12 @@ export default function ThingDetail({navigation}: { navigation: any }) {
     const [isDisplayVisible, setIsDisplayVisible] = useState<boolean>(true)
     const [isEditVisible, setIsEditVisible] = useState<boolean>(false)
 
-    if (thing) navigation.setOptions({title: `Thing: ${thing.name}`})
-    else return <Loading/>
+    useEffect(() => {
+        if (thing)
+            navigation.setOptions({title: `Thing: ${thing.name}`})
+    }, [thing, navigation])
+
+    if (!thing) return <Loading/>
 
     return (
         <View style={{flex: 1, marginHorizontal: 5}}>

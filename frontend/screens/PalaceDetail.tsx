@@ -163,13 +163,13 @@ const styles = StyleSheet.create({
     },
     roomCardContainer: {
         flexDirection: 'row',
-        // flex: 1,
         flexWrap: "wrap",
         justifyContent: 'space-between',
-        // alignItems: 'flex-start',
+        alignSelf: "flex-start",
     },
     roomCard: {
         width: 110,
+        margin: 5,
         // height: 100,
     },
     textAsNote: {

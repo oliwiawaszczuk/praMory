@@ -40,8 +40,13 @@ export default function RoomDetail({navigation}: { navigation: any }) {
         saveImage,
     } = useRoomDetails(id)
 
-    if (room) navigation.setOptions({title: `Room: ${room.name}`})
-    else return <Loading/>
+    useEffect(() => {
+        if (room) {
+            navigation.setOptions({title: `Room: ${room.name}`});
+        }
+    }, [room, navigation]);
+
+    if (!room) return <Loading/>
 
     const handleLinkRoomToImage = () => {
         navigation.navigate("LinkRoomPinToImage", {room_id: id})
@@ -73,7 +78,7 @@ export default function RoomDetail({navigation}: { navigation: any }) {
                     {!isSliderVisible ?
                         <View style={styles.thingCardContainer}>
                             {things.map((thing) =>
-                                <View key={thing.id}>
+                                <View key={thing.id} style={{margin: 5}}>
                                     <ThingCard thing={thing} navigation={navigation}/>
                                 </View>
                             )}
@@ -126,5 +131,6 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         flexWrap: "wrap",
         justifyContent: 'space-between',
+        alignSelf: "flex-start",
     },
 })

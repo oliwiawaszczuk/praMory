@@ -23,6 +23,9 @@ interface StorageInterface {
     addThing: (room: Thing) => void
     removeThing: (id: number) => void
     updateThing: (room: Thing) => void
+    addImage: (thing_id: number, path: string) => void
+    removeImage: (thing_id: number, path: string) => void
+    swapImages: (thing_id: number, index_1: number, index_2: number) => void
 }
 
 export const storage = create<StorageInterface>()(
@@ -135,6 +138,55 @@ export const storage = create<StorageInterface>()(
                     }),
                 }))
             },
+            addImage: (thing_id: number, path: string) => {
+                set((state) => ({
+                    things: state.things.map((thing) => {
+                        if (thing.id === thing_id) {
+                            const newImage = { path, order: (thing.path_to_images?.length || 0) + 1 }
+                            return {
+                                ...thing,
+                                path_to_images: thing.path_to_images ? [...thing.path_to_images, newImage] : [newImage],
+                            }
+                        }
+                        return thing
+                    }),
+                }))
+            },
+            removeImage: (thing_id: number, path: string) => {
+                set((state) => ({
+                    things: state.things.map((thing) => {
+                       if (thing.id === thing_id) {
+                           const updatedImages = thing.path_to_images
+                               ?.filter((image) => image.path !== path)
+                               .map((image, index) => ({...image, order: index + 1}))
+                           return { ...thing, images: updatedImages }
+                       }
+                       return thing
+                    }),
+                }))
+            },
+            swapImages: (thing_id: number, index1: number, index2: number) => {
+                set((state) => ({
+                    things: state.things.map((thing) => {
+                        if (thing.id === thing_id && thing.path_to_images) {
+                            const images = [...thing.path_to_images]
+                            if (index1 >= 0 && index1 < images.length && index2 >= 0 && index2 < images.length) {
+                                const temp = images[index1]
+                                images[index1] = images[index2]
+                                images[index2] = temp
+
+                                images[index1].order = index1 + 1;
+                                images[index2].order = index2 + 1;
+                            }
+                            return {
+                                ...thing,
+                                path_to_images: images,
+                            }
+                        }
+                        return thing;
+                    }),
+                }))
+            }
         }),
         {
             name: 'app-storage',

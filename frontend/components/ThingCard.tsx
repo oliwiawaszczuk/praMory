@@ -38,7 +38,7 @@ export default function ThingCard({thing, navigation}: { thing: Thing, navigatio
             >
                 <View style={styles.imageContainer}>
                     {thing.path_to_images && thing.path_to_images[0] && <Image
-                        source={{uri: thing.path_to_images[0]}}
+                        source={{uri: thing.path_to_images[0].path}}
                         style={styles.image}
                         resizeMode="cover"
                     />}
