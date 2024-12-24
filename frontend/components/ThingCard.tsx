@@ -1,5 +1,5 @@
 import {TouchableOpacity, View, Image, Text, StyleSheet, Modal} from "react-native";
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {grayPrimary, greenPrimary, greenPrimaryDarker, yellowPrimary} from "../const/Colors";
 import {storage} from "../store/storage";
 import TextEditAndDeleteModal from "./Modals/TextEditAndDeleteModal";

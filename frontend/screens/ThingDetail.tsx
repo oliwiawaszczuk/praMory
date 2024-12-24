@@ -18,6 +18,7 @@ export default function ThingDetail({navigation}: { navigation: any }) {
     const [isEditVisible, setIsEditVisible] = useState<boolean>(false)
 
     useEffect(() => {
+        console.log("wefn, ", thing)
         if (thing)
             navigation.setOptions({title: `Thing: ${thing.name}`})
     }, [thing, navigation])

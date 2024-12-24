@@ -10,7 +10,7 @@ export default function CardsSlider({items, whereToGoDetail, navigation}: { item
     const [isNext, setIsNext] = useState<boolean>(true)
     const [isPrevious, setIsPrevious] = useState<boolean>(false)
 
-    const roomsWithIds = items.map(room => ({ id: room.id, room }))
+    const roomsWithIds = items.map(item => ({ id: item.id, item }))
 
     const goToNext = () => {
         if (currentIndex < roomsWithIds.length-1)
@@ -22,7 +22,7 @@ export default function CardsSlider({items, whereToGoDetail, navigation}: { item
             setCurrentIndex(currentIndex-1)
     }
 
-    const currentRoom = roomsWithIds[currentIndex].room
+    const currentItem = roomsWithIds[currentIndex].item
 
     useEffect(() => {
         setIsNext(currentIndex < roomsWithIds.length - 1)
@@ -34,7 +34,7 @@ export default function CardsSlider({items, whereToGoDetail, navigation}: { item
             <TouchableOpacity disabled={!isPrevious} activeOpacity={0.7} onPress={goToPrevious} style={[styles.arrowButton, { opacity: isPrevious ? 1 : 0.4 }]}/>
 
             <View style={styles.roomCardContainer}>
-                <CardCover whereToGoDetail={whereToGoDetail} item={currentRoom} navigation={navigation}/>
+                <CardCover whereToGoDetail={whereToGoDetail} item={currentItem} navigation={navigation}/>
             </View>
 
             <TouchableOpacity disabled={!isNext} activeOpacity={0.7} onPress={goToNext} style={[styles.arrowButton, { opacity: isNext ? 1 : 0.4 }]}/>

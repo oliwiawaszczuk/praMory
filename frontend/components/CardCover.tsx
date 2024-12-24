@@ -6,7 +6,7 @@ import {Room} from "../types/Room"
 import {Loading} from "./Loading";
 import {Thing} from "../types/Thing";
 
-export default function CardCover({ item, navigation, whereToGoDetail }: {item: Room | Thing, navigation: any, whereToGoDetail: "RoomDetail" | "ThingDetail"}) {
+export default function CardCover({ item, navigation, whereToGoDetail }: {item: Room | Thing | null, navigation: any, whereToGoDetail: "RoomDetail" | "ThingDetail"}) {
     const [image, setImage] = useState<string | null>(null)
 
     const covers = [

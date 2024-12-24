@@ -42,9 +42,9 @@ export default function RoomDetail({navigation}: { navigation: any }) {
 
     useEffect(() => {
         if (room) {
-            navigation.setOptions({title: `Room: ${room.name}`});
+            navigation.setOptions({title: `Room: ${room.name}`})
         }
-    }, [room, navigation]);
+    }, [room, navigation])
 
     if (!room) return <Loading/>
 
@@ -56,17 +56,19 @@ export default function RoomDetail({navigation}: { navigation: any }) {
         <View style={{flex: 1, position: "relative"}}>
             <SliderLowerButtonsForRooms currentItem={room} navigation={navigation}/>
             {pathToImage && (
-                <BackgroundImageView isImageStatic={isImageStatic} setIsImageStatic={setIsImageStatic} pathToImage={pathToImage} navigation={navigation} activePin={activePin} setActivePin={setActivePin} forWhatPins={room}/>
+                <BackgroundImageView isImageStatic={isImageStatic} setIsImageStatic={setIsImageStatic}
+                                     pathToImage={pathToImage} navigation={navigation} activePin={activePin}
+                                     setActivePin={setActivePin} forWhatPins={room}/>
             )}
             <ScrollView style={styles.scrollView} nestedScrollEnabled={true}>
                 {activePin && isImageStatic &&
                     <View>
-                        <TouchableOpacity  activeOpacity={0.8} onPress={() => setActivePin(null)} style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                        <TouchableOpacity activeOpacity={0.8} onPress={() => setActivePin(null)}
+                                          style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
                             <TaxiDeco howManyLines={4}/>
                         </TouchableOpacity>
                         <CardCover
-                            // @ts-ignore
-                            item={things.find((thing) => thing.id === activePin.thing_id)}
+                            item={things.find((thing) => thing.id === activePin.thing_id) || null}
                             whereToGoDetail="ThingDetail"
                             navigation={navigation}
                         />
@@ -75,16 +77,18 @@ export default function RoomDetail({navigation}: { navigation: any }) {
 
                 <LineToOpen label="Things" visible={thingsVisible} setVisible={setThingsVisible}/>
                 {thingsVisible && (<>
-                    {!isSliderVisible ?
+                    {!isSliderVisible ? (
                         <View style={styles.thingCardContainer}>
-                            {things.map((thing) =>
+                            {things && things.map((thing) => (
                                 <View key={thing.id} style={{margin: 5}}>
                                     <ThingCard thing={thing} navigation={navigation}/>
                                 </View>
-                            )}
-                        </View> :
-                        <CardsSlider items={things} whereToGoDetail="ThingDetail" navigation={navigation}/>
-                    }
+                            ))}
+                        </View>
+                    ) : (
+                        things ? ( <CardsSlider items={things} whereToGoDetail="ThingDetail" navigation={navigation} /> ) : ( <View/> )
+                    )}
+
                     <View style={{flex: 1, flexDirection: 'row', justifyContent: 'space-between'}}>
                         <View style={{flex: 1}}>
                             <SquareBlankButton onPress={() => setIsSliderVisible(!isSliderVisible)}/>
@@ -101,7 +105,8 @@ export default function RoomDetail({navigation}: { navigation: any }) {
                 <LineToOpen label="Edit" visible={editVisible} setVisible={setEditVisible}/>
                 {editVisible && (
                     <View>
-                        <EditNameSnipNote name={room.name} snip={room.snip} note={room.note} saveName={saveName} saveSnip={saveSnip} saveNote={saveNote}/>
+                        <EditNameSnipNote name={room.name} snip={room.snip} note={room.note} saveName={saveName}
+                                          saveSnip={saveSnip} saveNote={saveNote}/>
 
                         <PrimaryButton text="Link room to palace image" onPressFunc={handleLinkRoomToImage}/>
                         <ImageSection saveImage={saveImage}/>
