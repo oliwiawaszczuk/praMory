@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "praMory",
-    "slug": "frontend",
+    "slug": "praMory",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -10,7 +10,7 @@
     "splash": {
       "image": "./assets/splash-icon.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#ffc951"
     },
     "ios": {
       "supportsTablet": true
@@ -18,12 +18,17 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "backgroundColor": "#ffc951"
       },
-      "package": "com.pra_oliwia.frontend"
+      "package": "com.pra_oliwia.praMory"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "0fd189ff-4e6f-4015-ba13-1f2a0388a697"
+      }
     }
   }
 }
