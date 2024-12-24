@@ -79,14 +79,14 @@ export default function RoomDetail({navigation}: { navigation: any }) {
                 {thingsVisible && (<>
                     {!isSliderVisible ? (
                         <View style={styles.thingCardContainer}>
-                            {things && things.map((thing) => (
+                            {things.length > 0 && things.map((thing) => (
                                 <View key={thing.id} style={{margin: 5}}>
                                     <ThingCard thing={thing} navigation={navigation}/>
                                 </View>
                             ))}
                         </View>
                     ) : (
-                        things ? ( <CardsSlider items={things} whereToGoDetail="ThingDetail" navigation={navigation} /> ) : ( <View/> )
+                        things.length > 0 ? ( <CardsSlider items={things} whereToGoDetail="ThingDetail" navigation={navigation} /> ) : ( <View/> )
                     )}
 
                     <View style={{flex: 1, flexDirection: 'row', justifyContent: 'space-between'}}>
