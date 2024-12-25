@@ -1,8 +1,8 @@
 import React, {useEffect} from "react";
 import {View, StyleSheet} from "react-native";
-import {Thing} from "../types/Thing";
-import {Text} from "./Text/Default";
-import {yellowPrimaryDarker} from "../const/Colors";
+import {Thing} from "../../types/Thing";
+import {Text} from "../Text/Default";
+import {yellowPrimaryDarker} from "../../const/Colors";
 
 interface DisplayThingProps {
     thing: Thing

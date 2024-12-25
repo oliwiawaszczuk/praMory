@@ -1,8 +1,8 @@
 import React, {useState} from "react"
 import {View, Modal, TextInput, StyleSheet} from "react-native"
-import {storage} from "../store/storage"
-import PrimaryButton from "./Buttons/Primary"
-import AddNewModal from "./Modals/AddNewModal";
+import {storage} from "../../store/storage"
+import PrimaryButton from "../Buttons/Primary"
+import AddNewModal from "../Modals/AddNewModal";
 
 export default function AddNewRoom({palace_id}: {palace_id: number}) {
     const addRoom = storage((state) => state.addRoom);

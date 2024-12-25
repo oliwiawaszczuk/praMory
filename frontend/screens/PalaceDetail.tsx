@@ -16,14 +16,14 @@ import {
     yellowPrimary,
     yellowPrimaryDarker
 } from "../const/Colors"
-import AddNewRoom from "../components/AddNewRoom"
+import AddNewRoom from "../components/Room/AddNewRoom"
 import SecondaryButton from "../components/Buttons/Secondary"
 import LineToOpen from "../components/LineToOpen"
 import CardCover from "../components/CardCover"
 import NoteInput from "../components/Input/Note"
 import {MIN_NOTE_HEIGHT, MAX_NOTE_HEIGHT, ONE_STEP_HEIGHT, PIN_SIZE} from "../const/Const"
 import CardsSlider from "../components/CardsSlider";
-import RoomCard from "../components/RoomCard";
+import RoomCard from "../components/Room/RoomCard";
 import Slider from '@react-native-community/slider'
 import {ImagePalacePin} from "../types/ImagePin";
 import {scaleActualToDisplayed} from "../utils/ScalePoint";

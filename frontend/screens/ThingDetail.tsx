@@ -5,8 +5,8 @@ import {Loading} from "../components/Loading"
 import LineToOpen from "../components/LineToOpen";
 import {useThingDetails} from "../hooks/useThingDetails";
 import SliderLowerButtonsForThings from "../components/SliderLowerButtonsForThings";
-import DisplayThing from "../components/DisplayThing";
-import EditThing from "../components/EditThing";
+import DisplayThing from "../components/Thing/DisplayThing";
+import EditThing from "../components/Thing/EditThing";
 
 export default function ThingDetail({navigation}: { navigation: any }) {
     const route = useRoute()
@@ -18,7 +18,6 @@ export default function ThingDetail({navigation}: { navigation: any }) {
     const [isEditVisible, setIsEditVisible] = useState<boolean>(false)
 
     useEffect(() => {
-        console.log("wefn, ", thing)
         if (thing)
             navigation.setOptions({title: `Thing: ${thing.name}`})
     }, [thing, navigation])

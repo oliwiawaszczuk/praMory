@@ -1,8 +1,8 @@
 import React, {useState} from "react"
 import {View} from "react-native"
-import {storage} from "../store/storage"
-import PrimaryButton from "./Buttons/Primary"
-import AddNewModal from "./Modals/AddNewModal";
+import {storage} from "../../store/storage"
+import PrimaryButton from "../Buttons/Primary"
+import AddNewModal from "../Modals/AddNewModal";
 
 export default function AddNewPalace() {
     const addPalace = storage((state) => state.addPalace)

@@ -1,9 +1,9 @@
 import {TouchableOpacity, View, Image, Text, StyleSheet, Modal} from "react-native";
 import React, {useState} from "react";
-import {grayPrimary, greenPrimary, greenPrimaryDarker, yellowPrimary} from "../const/Colors";
-import {storage} from "../store/storage";
-import {Room} from "../types/Room";
-import TextEditAndDeleteModal from "./Modals/TextEditAndDeleteModal";
+import {grayPrimary, greenPrimary, greenPrimaryDarker, yellowPrimary} from "../../const/Colors";
+import {storage} from "../../store/storage";
+import {Room} from "../../types/Room";
+import TextEditAndDeleteModal from "../Modals/TextEditAndDeleteModal";
 
 export default function RoomCard({room, navigation}: { room: Room, navigation: any }) {
     const [visibleEditRoomCardModal, setVisibleEditRoomCardModal] = useState(false)

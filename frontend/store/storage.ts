@@ -142,7 +142,7 @@ export const storage = create<StorageInterface>()(
                 set((state) => ({
                     things: state.things.map((thing) => {
                         if (thing.id === thing_id) {
-                            const newImage = { path, order: (thing.path_to_images?.length || 0) + 1 }
+                            const newImage = { path, order: (thing.path_to_images?.length || 0) }
                             return {
                                 ...thing,
                                 path_to_images: thing.path_to_images ? [...thing.path_to_images, newImage] : [newImage],

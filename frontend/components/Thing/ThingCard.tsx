@@ -1,10 +1,10 @@
 import {TouchableOpacity, View, Image, Text, StyleSheet, Modal} from "react-native";
 import React, {useEffect, useState} from "react";
-import {grayPrimary, greenPrimary, greenPrimaryDarker, yellowPrimary} from "../const/Colors";
-import {storage} from "../store/storage";
-import TextEditAndDeleteModal from "./Modals/TextEditAndDeleteModal";
-import {Thing} from "../types/Thing";
-import {useThingDetails} from "../hooks/useThingDetails";
+import {grayPrimary, greenPrimary, greenPrimaryDarker, yellowPrimary} from "../../const/Colors";
+import {storage} from "../../store/storage";
+import TextEditAndDeleteModal from "../Modals/TextEditAndDeleteModal";
+import {Thing} from "../../types/Thing";
+import {useThingDetails} from "../../hooks/useThingDetails";
 
 export default function ThingCard({thing, navigation}: { thing: Thing, navigation: any }) {
     const [visibleEditThingCardModal, setVisibleEditThingCardModal] = useState(false)
@@ -37,7 +37,7 @@ export default function ThingCard({thing, navigation}: { thing: Thing, navigatio
                 onLongPress={() => setVisibleEditThingCardModal(true)}
             >
                 <View style={styles.imageContainer}>
-                    {thing.path_to_images && thing.path_to_images[0] && <Image
+                    {thing.path_to_images && thing.path_to_images.length > 0 && <Image
                         source={{uri: thing.path_to_images[0].path}}
                         style={styles.image}
                         resizeMode="cover"

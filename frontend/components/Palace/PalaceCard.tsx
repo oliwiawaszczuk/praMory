@@ -1,10 +1,10 @@
 import {TouchableOpacity, View, Image, StyleSheet, Modal} from "react-native";
 import React, {useState} from "react";
-import {Palace} from "../types/Palace";
-import {Text} from "./Text/Default";
-import {grayPrimary, greenPrimary, greenPrimaryDarker, yellowPrimary} from "../const/Colors";
-import {storage} from "../store/storage";
-import TextEditAndDeleteModal from "./Modals/TextEditAndDeleteModal";
+import {Palace} from "../../types/Palace";
+import {Text} from "../Text/Default";
+import {grayPrimary, greenPrimary, greenPrimaryDarker, yellowPrimary} from "../../const/Colors";
+import {storage} from "../../store/storage";
+import TextEditAndDeleteModal from "../Modals/TextEditAndDeleteModal";
 
 export default function PalaceCard({palace, navigation}: { palace: Palace, navigation: any }) {
     const [visibleEditPalaceCardModal, setVisibleEditPalaceCardModal] = useState(false)
