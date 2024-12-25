@@ -32,7 +32,7 @@ export function useThingDetails(thing_id: number) {
             const currentImage = updatedImages[index]
             const swapIndex = index + direction
 
-            if (swapIndex >= 0 && swapIndex < updatedImages.length+1) {
+            if (swapIndex >= 0 && swapIndex < updatedImages.length) {
                 const swapImage = updatedImages[swapIndex]
 
                 updatedImages[swapIndex] = currentImage
