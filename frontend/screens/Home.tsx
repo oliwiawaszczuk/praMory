@@ -7,7 +7,7 @@ import PalaceCard from "../components/PalaceCard";
 import AddNewPalace from "../components/AddNewPalace";
 
 export default function HomeScreen({navigation}: {navigation: any}) {
-    const palaces = storage((state) => state.palaces);
+    const palaces = storage((state) => state.palaces)
 
     return (
         <View style={{flex: 1, margin: 15}}>

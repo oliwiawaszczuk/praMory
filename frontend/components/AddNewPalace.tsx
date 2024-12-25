@@ -5,10 +5,10 @@ import PrimaryButton from "./Buttons/Primary"
 import AddNewModal from "./Modals/AddNewModal";
 
 export default function AddNewPalace() {
-    const addPalace = storage((state) => state.addPalace);
-    const [newTitle, setNewTitle] = useState('');
-    const [modalVisible, setModalVisible] = useState(false);
-    const palaces = storage((state) => state.palaces);
+    const addPalace = storage((state) => state.addPalace)
+    const [newTitle, setNewTitle] = useState('')
+    const [modalVisible, setModalVisible] = useState(false)
+    const palaces = storage((state) => state.palaces)
 
     const handleAddPalace = () => {
         if (newTitle.trim()) {
@@ -28,7 +28,7 @@ export default function AddNewPalace() {
     return (
         <View>
             <AddNewModal label="Add new palace" modalVisible={modalVisible} setModalVisible={setModalVisible} newText={newTitle} setNewText={setNewTitle} handleAddRoom={handleAddPalace}/>
-            <PrimaryButton text="Add new palace" onPressFunc={() => setModalVisible(true)} />
+            <PrimaryButton text="Add new Palace" onPressFunc={() => setModalVisible(true)} />
         </View>
     )
 }

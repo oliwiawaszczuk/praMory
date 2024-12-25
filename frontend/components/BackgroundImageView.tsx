@@ -92,6 +92,22 @@ export default function BackgroundImageView({isImageStatic, setIsImageStatic, pa
                 onPress={() => setIsImageStatic(!isImageStatic)}
                 style={{width: 30, height: 30, position: "absolute", top: 5, right: 5, borderRadius: 10, backgroundColor: greenPrimaryDarker, zIndex: 2}}
             />
+            {isImageStatic &&
+                <View style={styles.sliderContainer}>
+                    <HorizontalLine color={yellowPrimaryDarker} lineHeight={18}/>
+                    <Slider
+                        style={styles.slider}
+                        minimumValue={1}
+                        maximumValue={5}
+                        value={sliderValue}
+                        onValueChange={handleSliderChange}
+                        minimumTrackTintColor="rgba(0, 0, 0, 0)"
+                        maximumTrackTintColor="rgba(0, 0, 0, 0)"
+                        thumbTintColor={greenPrimaryDarker}
+                        step={0.1}
+                    />
+                </View>
+            }
             <TouchableOpacity
                 activeOpacity={0.9}
                 onLongPress={() => navigation.navigate('ImageLook', {pathToImage: pathToImage})}
@@ -126,23 +142,9 @@ export default function BackgroundImageView({isImageStatic, setIsImageStatic, pa
                         </View>
                     </ImageBackground>}
             </TouchableOpacity>
-            {!isImageStatic ?
+            {!isImageStatic &&
                 <View {...panResponder.panHandlers} style={styles.dragLine}>
                     <View style={styles.handler}></View>
-                </View> :
-                <View style={styles.sliderContainer}>
-                    <HorizontalLine color={yellowPrimaryDarker} lineHeight={10}/>
-                    <Slider
-                        style={styles.slider}
-                        minimumValue={1}
-                        maximumValue={5}
-                        value={sliderValue}
-                        onValueChange={handleSliderChange}
-                        minimumTrackTintColor="rgba(0, 0, 0, 0)"
-                        maximumTrackTintColor="rgba(0, 0, 0, 0)"
-                        thumbTintColor={greenPrimaryDarker}
-                        step={0.1}
-                    />
                 </View>
             }
         </View>
