@@ -11,6 +11,7 @@ import {greenPrimary, yellowPrimary} from "../../const/Colors";
 import SecondaryButton from "../Buttons/Secondary";
 import {Text} from "../Text/Default";
 import TaxiDeco from "../Decorations/Taxi";
+import {ImagesSection} from "../ImagesSection";
 
 interface EditThingProps {
     thing_prop: Thing
@@ -35,7 +36,7 @@ export default function EditThing({thing_prop, navigation}: EditThingProps) {
             <LineToOpen visible={isImageVisible} setVisible={setIsImageVisible} label="Images"/>
             {isImageVisible && (
                 <View>
-                    <ImageSection saveImage={AddImage}/>
+                    <ImagesSection saveImage={AddImage}/>
                     {thing.path_to_images &&
                         <>
                             <ScrollView
