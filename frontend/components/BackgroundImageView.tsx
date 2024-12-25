@@ -142,10 +142,11 @@ export default function BackgroundImageView({isImageStatic, setIsImageStatic, pa
                         </View>
                     </ImageBackground>}
             </TouchableOpacity>
-            {!isImageStatic &&
+            {!isImageStatic ?
                 <View {...panResponder.panHandlers} style={styles.dragLine}>
                     <View style={styles.handler}></View>
-                </View>
+                </View> :
+                <HorizontalLine color={yellowPrimaryDarker} lineHeight={4}/>
             }
         </View>
     )

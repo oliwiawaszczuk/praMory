@@ -13,6 +13,7 @@ import RoomDetail from "./screens/RoomDetail";
 import LinkRoomPinToImage from "./screens/LinkRoomPinToImage";
 import ThingDetail from "./screens/ThingDetail";
 import LinkThingPinToImage from "./screens/LinkThingPinToImage";
+import Palaces from "./screens/Palaces";
 
 const Stack = createNativeStackNavigator();
 
@@ -64,6 +65,7 @@ export default function App() {
                 screenLayout={Layout}
             >
                 <Stack.Screen name="Home" component={HomeScreen} options={{title: 'praMory' }}/>
+                <Stack.Screen name="Palaces" component={Palaces} options={{title: 'Palaces' }}/>
                 <Stack.Screen name="PalaceDetail" component={PalaceDetail} options={{title: 'Palace Detail' }}/>
                 <Stack.Screen name="RoomDetail" component={RoomDetail} options={{title: 'Room Detail' }}/>
                 <Stack.Screen name="ThingDetail" component={ThingDetail} options={{title: 'Thing Detail' }}/>
