@@ -34,6 +34,7 @@ import TaxiDeco from "../components/Decorations/Taxi";
 import {usePalaceDetails} from "../hooks/usePalaceDetails";
 import {ImageSection} from "../components/ImageSection";
 import {SquareBlankButton} from "../components/Buttons/SquareBlankButton";
+import {exportPalace} from "../utils/exportPalace";
 
 export default function PalaceDetail({navigation}: { navigation: any }) {
     const route = useRoute()
@@ -144,6 +145,7 @@ export default function PalaceDetail({navigation}: { navigation: any }) {
                     </View>
                 )}
                 <ImageSection saveImage={SaveImage}/>
+                <SecondaryButton text="Export Palace" onPressFunc={() => exportPalace(palace.id)} />
             </ScrollView>
             <NoteInputModal modalVisible={noteEditVisible} setModalVisible={setNoteEditVisible} noteEditText={noteEditText} setNoteEditText={setNoteEditText} saveFunc={SaveNote}/>
         </View>
