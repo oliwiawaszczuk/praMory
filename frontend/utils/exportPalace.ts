@@ -1,16 +1,25 @@
 import {storage} from "../store/storage";
 import RNFS from 'react-native-fs';
 import { zip } from 'react-native-zip-archive';
+import { format } from 'date-fns';
 
-export const saveAndShareZip = async (zipFilePath: string, fileName: string) => {
+const generateUniqueFileName = (fileName: string) => {
+    const now = new Date()
+    // const date = now.toLocaleDateString('en-CA')
+    const formattedDate = format(now, 'yyyy-MM-dd_HH-mm-ss')
+    return `${fileName}_${formattedDate}`
+}
+
+export const saveZip = async (zipFilePath: string, fileName: string) => {
     const downloadDirectory = `${RNFS.ExternalStorageDirectoryPath}/Download/`
-    const newZipPath = `${downloadDirectory}${fileName}.zip`
+
+    const newZipPath = `${downloadDirectory}${generateUniqueFileName(fileName)}.zip`
 
     try {
         await RNFS.copyFile(zipFilePath, newZipPath)
         console.log('File copied to:', newZipPath)
     } catch (error) {
-        console.error('Error saving or sharing file:', error)
+        console.error('Error saving file:', error)
     }
 }
 
@@ -62,7 +71,7 @@ export const exportPalace = async (palace_id: number) => {
         // @ts-ignore
         const zipResult = await zip(filesToZip, zipPath)
         console.log("ZIP utworzony:", zipResult)
-        await saveAndShareZip(zipResult, fileName)
+        await saveZip(zipResult, fileName)
 
     } catch (e) {
         console.log("ERROR:", e)

@@ -2,6 +2,8 @@ import React, {useEffect, useState} from "react";
 import {Button, TextInput, FlatList, View, ScrollView, StyleSheet, TouchableOpacity} from "react-native";
 import {Text} from "../components/Text/Default"
 import {greenPrimary, yellowPrimary} from "../const/Colors";
+import PrimaryButton from "../components/Buttons/Primary";
+import {importPalace} from "../utils/importPalace";
 
 const size: number = 50
 const length: number = 48
@@ -25,6 +27,7 @@ export default function SettingsScreen() {
                 )}
             </View>
             <Text style={styles.text}>{clicked}</Text>
+            <PrimaryButton text="Import palace" onPressFunc={importPalace}/>
         </View>
     )
 }

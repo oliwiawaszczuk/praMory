@@ -42,10 +42,16 @@ export const storage = create<StorageInterface>()(
                 }))
             },
             removePalace: (id: number) => {
-                set((state) => ({
-                    palaces: state.palaces.filter((palace) => palace.id !== id),
-                    rooms: state.rooms.filter((room) => room.palace_id !== id ),
-                }))
+                 set((state) => {
+                    const roomsInPalace = state.rooms.filter((room) => room.palace_id === id)
+                    const rooms_id = roomsInPalace.map((room) => room.id)
+
+                    return {
+                        palaces: state.palaces.filter((palace) => palace.id !== id),
+                        rooms: state.rooms.filter((room) => room.palace_id !== id),
+                        things: state.things.filter((thing) => !rooms_id.includes(thing.room_id)),
+                    }
+                })
             },
             updatePalace: (newPalace: Palace) => {
                 set((state) => ({
@@ -62,14 +68,20 @@ export const storage = create<StorageInterface>()(
                 }))
             },
             removeRoom: (id: number) => {
-                set((state) => ({
-                    rooms: state.rooms.filter((room) => room.id !== id ),
-                    palaces: state.palaces.map((palace) => {
-                        if (palace.pins)
-                            palace.pins = palace.pins.filter((pin) => pin.room_id !== id)
-                        return palace
-                    })
-                }))
+                set((state) => {
+                    const rooms_id = state.rooms.map((room) => room.id)
+
+                    return {
+                        rooms: state.rooms.filter((room) => room.id !== id),
+                        things: state.things.filter((thing) => !rooms_id.includes(thing.room_id)),
+                        palaces: state.palaces.map((palace) => {
+                            if (palace.pins) {
+                                palace.pins = palace.pins.filter((pin) => pin.room_id !== id)
+                            }
+                            return palace
+                        }),
+                    }
+                })
             },
             updateRoom: (newRoom: Room) => {
                 set((state) => ({
@@ -105,12 +117,17 @@ export const storage = create<StorageInterface>()(
             },
             removeThing: (id: number) => {
                 set((state) => ({
-                    things: state.things.filter((thing) => thing.id !== id ),
+                    things: state.things.filter((thing) => thing.id !== id),
                     rooms: state.rooms.map((room) => {
                         if (room.pins)
                             room.pins = room.pins.filter((pin) => pin.thing_id !== id)
                         return room
-                    })
+                    }),
+                    palaces: state.palaces.map((palace) => {
+                        if (palace.pins)
+                            palace.pins = palace.pins.filter((pin) => pin.room_id !== state.rooms.find(room => room.id === id)?.id)
+                        return palace
+                    }),
                 }))
             },
             updateThing: (newThing: Thing) => {
