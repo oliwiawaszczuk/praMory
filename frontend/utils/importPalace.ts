@@ -41,6 +41,7 @@ export const importPalace = async () => {
         const state = storage.getState()
         const palace_id = state.palaces.length > 0 ? Math.max(...state.palaces.map(p => p.id)) + 1 : 1
         palace.id = palace_id
+        palace.path_to_image = palace.path_to_image.replace("cache", "files")
         state.addPalace(palace)
 
         const roomIdMap = new Map<number, number>()
@@ -55,6 +56,8 @@ export const importPalace = async () => {
 
             room.palace_id = palace_id
             room.id = newRoomId
+            if (room.path_to_image)
+                room.path_to_image = room.path_to_image.replace("cache", "files")
 
             roomIdMap.set(oldRoomId, newRoomId)
 
@@ -76,6 +79,8 @@ export const importPalace = async () => {
             const oldRoomId = thing.room_id
             const newRoomId = roomIdMap.get(oldRoomId)
             thing.room_id = newRoomId
+            for (let path_to_images of thing.path_to_images)
+                path_to_images.path = path_to_images.path.replace("cache", "files")
 
             thingIdMap.set(oldThingId, newThingId)
 
