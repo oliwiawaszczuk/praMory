@@ -46,10 +46,12 @@ export const importPalace = async () => {
         const roomIdMap = new Map<number, number>()
         const thingIdMap = new Map<number, number>()
 
+        let maxRoomId = state.rooms.length > 0 ? Math.max(...state.rooms.map(r => r.id)) + 1 + roomIdMap.size : 0
+
         // @ts-ignore
         for (let room: Room of rooms) {
             const oldRoomId = room.id
-            const newRoomId = state.rooms.length > 0 ? Math.max(...state.rooms.map(r => r.id)) + 1 + roomIdMap.size : 1
+            const newRoomId = ++maxRoomId
 
             room.palace_id = palace_id
             room.id = newRoomId
@@ -63,10 +65,12 @@ export const importPalace = async () => {
             state.addRoom(room)
         }
 
+        let maxThingId = state.things.length > 0 ? Math.max(...state.things.map(t => t.id)) : 0
+
         // @ts-ignore
         for (let thing: Thing of things) {
             const oldThingId = thing.id
-            const newThingId = state.things.length > 0 ? Math.max(...state.things.map(t => t.id)) + 1 + thingIdMap.size : 1
+            const newThingId = ++maxThingId
             thing.id = newThingId
 
             const oldRoomId = thing.room_id
@@ -93,8 +97,8 @@ export const importPalace = async () => {
         const imageFiles = files.filter(f => !f.name.endsWith(".json"))
 
         for (const imageFile of imageFiles) {
-            const newPath = `${RNFS.DocumentDirectoryPath}/${imageFile.name}`
-            await RNFS.moveFile(imageFile.path, newPath)
+            const newPath = `file://${RNFS.DocumentDirectoryPath}/${imageFile.name}`
+            await RNFS.copyFile(imageFile.path, newPath)
         }
 
     } catch (e) {
