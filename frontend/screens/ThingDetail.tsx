@@ -27,21 +27,21 @@ export default function ThingDetail({navigation}: { navigation: any }) {
     return (
         <View style={{flex: 1, marginHorizontal: 5}}>
             <SliderLowerButtonsForThings currentItem={thing} navigation={navigation}/>
-            <View style={{marginTop: 10}}>
+            <ScrollView style={{marginTop: 10}}>
                 <LineToOpen label="Display" visible={isDisplayVisible} setVisible={setIsDisplayVisible}/>
                 {isDisplayVisible &&
-                    <ScrollView style={styles.scrollView}>
+                    <View style={styles.scrollView}>
                         <DisplayThing thing={thing}/>
-                    </ScrollView>
+                    </View>
                 }
 
                 <LineToOpen label="Edit" visible={isEditVisible} setVisible={setIsEditVisible}/>
                 {isEditVisible &&
-                    <ScrollView style={styles.scrollView}>
+                    <View style={styles.scrollView}>
                         <EditThing thing_prop={thing} navigation={navigation}/>
-                    </ScrollView>
+                    </View>
                 }
-            </View>
+            </ScrollView>
         </View>
     )
 }

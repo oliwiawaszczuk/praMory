@@ -19,7 +19,10 @@ export default function SliderLowerButtonsForThings({ currentItem, navigation }:
         const roomThings = storage.getState().things.filter(
             (thing) => thing.room_id === currentItem.room_id
         )
-        const thingsWithIds = roomThings.map((thing, index) => ({ id: thing.id, index }))
+
+        const sortedThings = roomThings.sort((a, b) => a.name.localeCompare(b.name))
+
+        const thingsWithIds = sortedThings.map((thing, index) => ({ id: thing.id, index }))
         // @ts-ignore
         setItems(thingsWithIds)
 

@@ -19,6 +19,7 @@ export default function CardCover({ item, navigation, whereToGoDetail }: {item: 
     const [activeStates, setActiveStates] = useState([false, false, false, false])
 
     useEffect(() => {
+        setImage(null)
         // @ts-ignore
         if (whereToGoDetail === "ThingDetail" && item.path_to_images && item.path_to_images.length > 0) setImage(item.path_to_images[0].path)
         // @ts-ignore
@@ -63,7 +64,7 @@ export default function CardCover({ item, navigation, whereToGoDetail }: {item: 
                 </View>
 
 
-                <View style={[styles.wrapper, {height: 200}]}>
+                <View style={[styles.wrapper, activeStates[2] && image ? {height: 200} : {height: 80}]}>
                     <TouchableOpacity onPress={() => handlePress(2)} activeOpacity={0.8} style={styles.interactiveBar}>
                         {activeStates[2] && (
                             image ?
@@ -158,7 +159,7 @@ const styles = StyleSheet.create({
     },
     interactiveBar: {
         flex: 1,
-        maxHeight: 200,
+        // maxHeight: 200,
         zIndex: 2,
         alignItems: "center",
         justifyContent: "center",

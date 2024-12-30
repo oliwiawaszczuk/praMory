@@ -22,5 +22,7 @@ export function usePalaceDetails(palace_id: number) {
             updatePalace({...palace, path_to_image: path})
     }
 
-    return { palace, rooms, saveImage }
+    const sortedRooms = rooms.sort((a, b) => a.name.localeCompare(b.name))
+
+    return { palace, sortedRooms, saveImage }
 }

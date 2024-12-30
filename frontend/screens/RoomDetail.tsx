@@ -32,7 +32,7 @@ export default function RoomDetail({navigation}: { navigation: any }) {
 
     const {
         room,
-        things,
+        sortedThings,
         pathToImage,
         saveName,
         saveSnip,
@@ -68,25 +68,25 @@ export default function RoomDetail({navigation}: { navigation: any }) {
                             <TaxiDeco howManyLines={4}/>
                         </TouchableOpacity>
                         <CardCover
-                            item={things.find((thing) => thing.id === activePin.thing_id) || null}
+                            item={sortedThings.find((thing) => thing.id === activePin.thing_id) || null}
                             whereToGoDetail="ThingDetail"
                             navigation={navigation}
                         />
                     </View>
                 }
 
-                <LineToOpen label="Things" visible={thingsVisible} setVisible={setThingsVisible}/>
+                <LineToOpen label={`Things   ${sortedThings.length}`} visible={thingsVisible} setVisible={setThingsVisible}/>
                 {thingsVisible && (<>
                     {!isSliderVisible ? (
                         <View style={styles.thingCardContainer}>
-                            {things.length > 0 && things.map((thing) => (
+                            {sortedThings.length > 0 && sortedThings.map((thing) => (
                                 <View key={thing.id} style={{margin: 5}}>
                                     <ThingCard thing={thing} navigation={navigation}/>
                                 </View>
                             ))}
                         </View>
                     ) : (
-                        things.length > 0 ? ( <CardsSlider items={things} whereToGoDetail="ThingDetail" navigation={navigation} /> ) : ( <View/> )
+                        sortedThings.length > 0 ? ( <CardsSlider items={sortedThings} whereToGoDetail="ThingDetail" navigation={navigation} /> ) : ( <View/> )
                     )}
 
                     <View style={{flex: 1, flexDirection: 'row', justifyContent: 'space-between'}}>

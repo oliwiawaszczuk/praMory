@@ -35,6 +35,7 @@ import {usePalaceDetails} from "../hooks/usePalaceDetails";
 import {ImageSection} from "../components/ImageSection";
 import {SquareBlankButton} from "../components/Buttons/SquareBlankButton";
 import {exportPalace} from "../utils/exportPalace";
+import OkAndCancelModal from "../components/Modals/OkAndCancelModal";
 
 export default function PalaceDetail({navigation}: { navigation: any }) {
     const route = useRoute()
@@ -52,7 +53,9 @@ export default function PalaceDetail({navigation}: { navigation: any }) {
     const [noteEditText, setNoteEditText] = useState("")
     const [noteHeight, setNoteHeight] = useState(MIN_NOTE_HEIGHT)
 
-    const {palace, rooms, saveImage} = usePalaceDetails(id)
+    const [modalVisible, setModalVisible] = useState<boolean>(false)
+
+    const {palace, sortedRooms, saveImage} = usePalaceDetails(id)
     const updatePalace = storage(state => state.updatePalace)
 
     useEffect(() => {
@@ -79,6 +82,7 @@ export default function PalaceDetail({navigation}: { navigation: any }) {
 
     return (
         <View style={{flex: 1}}>
+            <OkAndCancelModal modalVisible={modalVisible} setModalVisible={setModalVisible} label="Are you sure to export palace?" okFunc={() => exportPalace(palace.id)}/>
             {palaceImage && (
                 <BackgroundImageView activePin={activePin} setActivePin={setActivePin} isImageStatic={isImageStatic} setIsImageStatic={setIsImageStatic} pathToImage={palaceImage} navigation={navigation} forWhatPins={palace}/>
             )}
@@ -90,23 +94,23 @@ export default function PalaceDetail({navigation}: { navigation: any }) {
                         </TouchableOpacity>
                         <CardCover
                             // @ts-ignore
-                            item={rooms.find((room) => room.id === activePin.room_id)}
+                            item={sortedRooms.find((room) => room.id === activePin.room_id)}
                             whereToGoDetail="RoomDetail"
                             navigation={navigation}
                         />
                     </View>
                 )}
-
-                <LineToOpen label="Rooms" visible={roomsVisible} setVisible={setRoomsVisible}/>
+                <Text></Text>
+                <LineToOpen label={`Rooms   ${sortedRooms.length}`} visible={roomsVisible} setVisible={setRoomsVisible}/>
                 {roomsVisible && (
                     <View style={styles.dropdown}>
-                        {rooms.length > 0 && (isSliderVisible ?
+                        {sortedRooms.length > 0 && (isSliderVisible ?
                             <View style={styles.roomCardContainer}>
-                                {rooms.map(room => (
+                                {sortedRooms.map(room => (
                                     <View key={room.id} style={styles.roomCard}><RoomCard room={room} navigation={navigation}/></View>
                                 ))}
                             </View> :
-                            <CardsSlider items={rooms} whereToGoDetail="RoomDetail" navigation={navigation}/>
+                            <CardsSlider items={sortedRooms} whereToGoDetail="RoomDetail" navigation={navigation}/>
                         )}
 
                         <View style={{flexDirection: 'row', justifyContent: 'space-between', width: '100%'}}>
@@ -145,7 +149,7 @@ export default function PalaceDetail({navigation}: { navigation: any }) {
                     </View>
                 )}
                 <ImageSection saveImage={SaveImage}/>
-                <SecondaryButton text="Export Palace" onPressFunc={() => exportPalace(palace.id)} />
+                <SecondaryButton text="Export Palace" onPressFunc={() => setModalVisible(true)} />
             </ScrollView>
             <NoteInputModal modalVisible={noteEditVisible} setModalVisible={setNoteEditVisible} noteEditText={noteEditText} setNoteEditText={setNoteEditText} saveFunc={SaveNote}/>
         </View>

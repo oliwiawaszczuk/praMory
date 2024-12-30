@@ -47,9 +47,11 @@ export function useRoomDetails(room_id: number) {
         }
     }
 
+    const sortedThings = things.sort((a, b) => a.name.localeCompare(b.name))
+
     return {
         room,
-        things,
+        sortedThings,
         pathToImage,
         saveName,
         saveSnip,

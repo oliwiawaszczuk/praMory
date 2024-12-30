@@ -20,7 +20,9 @@ export default function SliderLowerButtonsForRooms({ currentItem, navigation }: 
             (room) => room.palace_id === currentItem.palace_id
         )
 
-        const roomsWithIds = palaceRooms.map((room, index) => ({ id: room.id, index }))
+        const sortedRooms = palaceRooms.sort((a, b) => a.name.localeCompare(b.name))
+
+        const roomsWithIds = sortedRooms.map((room, index) => ({ id: room.id, index }))
         // @ts-ignore
         setItems(roomsWithIds)
 

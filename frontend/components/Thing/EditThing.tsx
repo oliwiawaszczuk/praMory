@@ -42,6 +42,7 @@ export default function EditThing({thing_prop, navigation}: EditThingProps) {
                             <ScrollView
                                 style={styles.scrollView}
                                 contentContainerStyle={styles.imageContainer}
+                                nestedScrollEnabled={true}
                             >
                                 {sortedImages().map((pathAndOrder, index) => (
                                     <TouchableOpacity onPress={() => setSelectedImage(pathAndOrder)} key={index} style={styles.imageWrapper} activeOpacity={0.7}>
