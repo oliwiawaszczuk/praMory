@@ -21,9 +21,9 @@ export default function CardCover({ item, navigation, whereToGoDetail }: {item: 
     useEffect(() => {
         setImage(null)
         // @ts-ignore
-        if (whereToGoDetail === "ThingDetail" && item.path_to_images && item.path_to_images.length > 0) setImage(item.path_to_images[0].path)
+        if (whereToGoDetail === "ThingDetail" && item?.path_to_images && item?.path_to_images.length > 0) setImage(item?.path_to_images[0].path)
         // @ts-ignore
-        if (whereToGoDetail === "RoomDetail" && item.path_to_image) setImage(item.path_to_image)
+        if (whereToGoDetail === "RoomDetail" && item?.path_to_image) setImage(item?.path_to_image)
     }, [item])
 
     const handlePress = (index: number) => {

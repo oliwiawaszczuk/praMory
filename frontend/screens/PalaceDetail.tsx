@@ -36,6 +36,7 @@ import {ImageSection} from "../components/ImageSection";
 import {SquareBlankButton} from "../components/Buttons/SquareBlankButton";
 import {exportPalace} from "../utils/exportPalace";
 import OkAndCancelModal from "../components/Modals/OkAndCancelModal";
+import {log} from "expo/build/devtools/logger";
 
 export default function PalaceDetail({navigation}: { navigation: any }) {
     const route = useRoute()

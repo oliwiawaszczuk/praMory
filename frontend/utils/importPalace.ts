@@ -6,6 +6,7 @@ import {log} from "expo/build/devtools/logger";
 import {Palace} from "../types/Palace";
 import {Room} from "../types/Room";
 import {Thing} from "../types/Thing";
+import {ImagePalacePin} from "../types/ImagePin";
 
 export const importPalace = async () => {
     const result = await DocumentPicker.pick({
@@ -98,6 +99,15 @@ export const importPalace = async () => {
 
             state.updateRoom(room)
         }
+
+        palace.pins = palace?.pins.map((pin: ImagePalacePin) => {
+            if (roomIdMap.has(pin.room_id)) {
+                return {...pin, room_id: roomIdMap.get(pin.room_id)}
+            }
+            return pin
+        })
+
+        state.updatePalace(palace)
 
         const imageFiles = files.filter(f => !f.name.endsWith(".json"))
 
