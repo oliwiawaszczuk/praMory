@@ -2,8 +2,6 @@ import RNFS from 'react-native-fs';
 import {unzip} from 'react-native-zip-archive';
 import DocumentPicker from 'react-native-document-picker';
 import {storage} from "../store/storage";
-import {log} from "expo/build/devtools/logger";
-import {Palace} from "../types/Palace";
 import {Room} from "../types/Room";
 import {Thing} from "../types/Thing";
 import {ImagePalacePin} from "../types/ImagePin";
@@ -25,13 +23,14 @@ export const importPalace = async () => {
         console.error("Error copy zip file", e)
     }
 
-    const extractPath = `${RNFS.DocumentDirectoryPath}/extracted_palace`
+    const extractPath = `${RNFS.DocumentDirectoryPath}/extracted_palace_${Date.now()}`
 
     try {
         const extractedPath = await unzip(destPath, extractPath)
         console.log("Extracted path:", extractedPath)
 
-        const files = await RNFS.readDir(extractedPath)
+        const files = await RNFS.readDir(`${extractedPath}/${fileName?.slice(0, -4)}`)
+        files.find(f => console.log(f.name))
         const jsonFile = files.find(f => f.name.endsWith(".json"))
 
         if (!jsonFile) throw new Error("json file not found")
